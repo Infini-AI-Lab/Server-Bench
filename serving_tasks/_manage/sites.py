@@ -41,7 +41,7 @@ PROSE_SUFFIXES = (".md", ".sh", ".py", ".yaml", ".toml", ".json")
 EVIDENCE = (
     "serverbench/artifacts",
     "serverbench/evolve_space",
-    "server_prototypes",
+    "server_output",
     "serving_tasks/_concurrency_search_archive",
     "evaluation_progress",
 )

@@ -75,7 +75,7 @@ def device_uuid(index: int) -> str:
 
 
 #: Path fragments that leak by location, whatever the content.
-LEAKAGE_PATHS = ("server_prototypes", "third_party")
+LEAKAGE_PATHS = ("server_output", "third_party")
 
 #: File names that leak by identity: the answers to a held-out partition.
 LEAKAGE_NAMES = (

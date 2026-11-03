@@ -21,7 +21,7 @@ Dockerfile with the local reference rewritten to a stage name. Nothing is
 rewritten but that reference.
 
 **The build context.** Both files COPY from the repository root, and sending
-the repository to Modal would mean sending `server_prototypes/` and
+the repository to Modal would mean sending `server_output/` and
 `artifacts/` with it. Only the paths the Dockerfiles actually name are staged,
 and they are discovered by reading the COPY lines rather than listed here, so a
 new COPY does not silently ship a broken image.

@@ -90,7 +90,7 @@ cat $R/SUMMARY.json                                            # terminal state,
 "$SERVERBENCH_PY" evaluation_progress/record_run.py --run $R   # its row in evaluation_progress/<task>.csv
 ```
 
-Every published version and its verdict land in `server_prototypes/<lineage>/`. The runbook is
+Every published version and its verdict land in `server_output/<lineage>/`. The runbook is
 [`serverbench/OPERATIONS.md`](serverbench/OPERATIONS.md).
 
 ## 🧪 Tasks
@@ -142,7 +142,7 @@ Server-Bench/
 ├── serving_tasks/        the tasks, plus _manage/ (taskctl), _modal/, _template/
 ├── evaluation_progress/  leaderboard.csv, ablations.csv, and the per-task ledgers runs write
 ├── experiments/          launchers for the experiment and ablation runs
-├── server_prototypes/    published versions and verdicts, written by runs
+├── server_output/        published versions and verdicts, written by runs
 ├── harbor/               vendored Harbor, which composes every agent container
 └── agentx-harness/       submodule: the pinned AgentX the verdict replays with
 ```

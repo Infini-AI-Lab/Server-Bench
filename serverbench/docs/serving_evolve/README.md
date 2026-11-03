@@ -9,7 +9,7 @@ serverbench/harness/lifecycle/            the evolve driver
 serverbench/harness/serving_evolve/       task and workspace contracts
 serverbench/harness/final_validate/       the verdict (measurement, scoring, private correctness)
 serverbench/skills/, skills_instructed/   what the agent is given (standard / instructed tasks)
-server_prototypes/                        the serving systems that come out
+server_output/                        the serving systems that come out
 ```
 
 | | |

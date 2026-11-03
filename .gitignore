@@ -50,8 +50,8 @@ serverbench/artifacts/env-input-int4/*
 # Workspaces, published versions, verdicts and result rows are written by runs
 # on the operator's machine.
 serverbench/evolve_space/
-server_prototypes/*
-!server_prototypes/README.md
+server_output/*
+!server_output/README.md
 evaluation_progress/*.csv
 !evaluation_progress/leaderboard.csv
 !evaluation_progress/ablations.csv

@@ -2,7 +2,7 @@
 """The production entrypoint for an evolve run. There is exactly one.
 
     serverbench/scripts/evolve --task <task dir> --gpu N --hours H \
-        --model-dir ... --env-input ... --lineage-root server_prototypes
+        --model-dir ... --env-input ... --lineage-root server_output
 
 Operators normally launch through `scripts/server_evolve/evolve-task.sh`, which
 fills these in and passes the task's own `demo/` as `--seed` unless `SEED` is

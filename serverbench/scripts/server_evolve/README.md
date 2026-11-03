@@ -60,7 +60,7 @@ serverbench/evolve_space/evolve/<task id, lower case>/<run-id>/
   workspace/        the agent's tree, including MEMORY/
 ```
 
-Published versions go to `server_prototypes/<lineage>/`. Nothing reclaims a
+Published versions go to `server_output/<lineage>/`. Nothing reclaims a
 finished run's `workspace/.venv`, which holds several gigabytes; watch free disk
 before a long series of runs. The wall clock, the journal and the verdict are
 described in [`OPERATIONS.md`](../../OPERATIONS.md#2-running-an-evolve).

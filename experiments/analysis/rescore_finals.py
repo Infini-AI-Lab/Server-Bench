@@ -3,7 +3,7 @@
 A verdict is a directory holding `scenario-candidate.json` and the candidate's
 AgentX export (`agentx/candidate/profile_export.jsonl`). Two kinds are found:
 
-    final       a lineage's own verdict, under server_prototypes/<lineage>/FINAL_VALIDATION/
+    final       a lineage's own verdict, under server_output/<lineage>/FINAL_VALIDATION/
     remeasured  a version measured again outside its run, e.g. by
                 experiments/ablation_budget_retrospective.sh
 
@@ -79,13 +79,13 @@ def main() -> int:
     ap.add_argument("--remeasured", type=Path, action="append", default=None,
                     help=f"root of re-measured verdicts; repeatable "
                          f"(default: {common.display(common.REMEASURED)})")
-    common.add_paths(ap, "evolve", "prototypes", "tasks", "out")
+    common.add_paths(ap, "evolve", "server_output", "tasks", "out")
     args = ap.parse_args()
     remeasured = args.remeasured or [common.REMEASURED]
     runs = common.runs_by_lineage(args.evolve)
 
     rows = []
-    for verdict in verdict_dirs([args.prototypes, *remeasured]):
+    for verdict in verdict_dirs([args.server_output, *remeasured]):
         body = common.load_json(verdict / "scenario-candidate.json")
         task = (body.get("verdict") or {}).get("task_id", "")
         if not task or not (args.tasks / task / "contract.yaml").is_file():

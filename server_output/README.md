@@ -1,4 +1,4 @@
-# `server_prototypes/` — what agents built, and the verdict on it
+# `server_output/` — what agents built, and the verdict on it
 
 One directory per **lineage**: one `(task, model, agent)` ascent, opened by an
 evolve run and extended by its resumes. Everything here is written by the evolve
@@ -13,7 +13,7 @@ holds the source and the evidence behind it.
 ## Layout
 
 ```
-server_prototypes/
+server_output/
   <UTC start>-<task id, lower case>-<agent model>-<effort>/        a lineage
     <lineage>_v1/  <lineage>_v2/  ...                              published versions
     <lineage>_v<N>.status.json                                     each version's status record

@@ -70,7 +70,7 @@ OPERATIONS.md        the runbook
 
 A run lives at `evolve_space/evolve/<task, lower case>/<run-id>/`
 (`workspace/`, `journal.jsonl`, `SUMMARY.json`, `trajectory.atif.json`), and its
-published versions and verdict at `server_prototypes/<lineage>/` in the
+published versions and verdict at `server_output/<lineage>/` in the
 repository root, where a lineage is one `(task, model, agent)` ascent. Both are
 gitignored, as are the per-task result files `evaluation_progress/<task>.csv`.
 

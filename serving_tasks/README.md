@@ -3,7 +3,7 @@
 One directory per task. A task is the frozen definition of one serving problem:
 the model and hardware, the workload, the p90 bars and prices it is scored
 against, the starter an agent begins from, and the evaluator that judges it.
-What agents built for a task lives in `server_prototypes/`; the harness that
+What agents built for a task lives in `server_output/`; the harness that
 runs them is `serverbench/`.
 
 ## Live tasks

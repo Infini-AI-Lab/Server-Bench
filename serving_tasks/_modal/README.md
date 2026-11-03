@@ -68,7 +68,7 @@ re-fetchable from a pinned revision by `setup`.
 
 The run's evidence is never only in a volume. The agent's tree is pulled home at
 every version boundary, and the verdict's evidence is pulled to the host before
-its sandbox is terminated, both under `evolve_space/` and `server_prototypes/`.
+its sandbox is terminated, both under `evolve_space/` and `server_output/`.
 
 `purge` **refuses while a sandbox is running** unless `--force`: deleting a
 volume under a live run takes the checkpoint away from a server

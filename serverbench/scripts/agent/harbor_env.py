@@ -312,8 +312,8 @@ def redacted(text: str) -> str:
     A RUN'S EVIDENCE MUST NOT CARRY A KEY. `harbor_environment.json` records
     the overlay this run was composed from -- the only statement of what the
     container was actually given -- and the overlay carries the agent's
-    provider credentials as environment values. Evidence is copied into
-    prototypes, read by reports, and passed around when a run is being
+    provider credentials as environment values. Evidence is copied into published
+    versions, read by reports, and passed around when a run is being
     explained, so a credential in it is a credential in all of those.
 
     What is kept is the NAME and the fact that a value was set, because "no

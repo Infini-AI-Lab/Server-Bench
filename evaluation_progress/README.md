@@ -73,4 +73,4 @@ another launcher before any agent work starts is requeued without a row.
 | `verdict` | `HOLDS`, `MISSES`, `NOT_RUN`, or the terminal state of a run that never reached measurement |
 | `evolve_hours`, `started_utc`, `measured_utc`, `run_id`, `version`, `versions_published`, `backend` | which run; the version the verdict judged (the run's final head) and how many versions the run published; where the agent ran: `container` (local Docker) or `modal` |
 | `source` | `verdict` (read from `FINAL.json` + `scenario-*.json`) or `run_summary` (a run with no measurement) |
-| `evidence` | the verdict's evidence directory under `server_prototypes/<lineage>/FINAL_VALIDATION/` |
+| `evidence` | the verdict's evidence directory under `server_output/<lineage>/FINAL_VALIDATION/` |

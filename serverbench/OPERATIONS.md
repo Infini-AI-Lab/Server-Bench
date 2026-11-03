@@ -111,7 +111,7 @@ fresh sandboxes (Modal). The verdict offers the load the tree declares in
 `concurrency.json`, draws an odd workload seed no development run could have
 drawn, and runs the private correctness stage
 ([`docs/serving_evolve/correctness.md`](docs/serving_evolve/correctness.md)).
-Evidence lands under `server_prototypes/<lineage>/FINAL_VALIDATION/<version>/`,
+Evidence lands under `server_output/<lineage>/FINAL_VALIDATION/<version>/`,
 and `evaluation_progress/record_run.py --run $R` writes the run's row to
 `evaluation_progress/<task>.csv` once the lineage's `FINAL.json` exists (see
 [`evaluation_progress/README.md`](../evaluation_progress/README.md)).
@@ -192,12 +192,12 @@ workload seed the agent never saw.
 | file | what it says |
 |---|---|
 | `$R/SUMMARY.json` | how the run ended, and which version is the final head |
-| `server_prototypes/<lineage>/<lineage>_v<N>/` | a published version: the tree, frozen, with `VERSION.json` |
-| `server_prototypes/<lineage>/FINAL.json` | the verdict's summary for the final head |
+| `server_output/<lineage>/<lineage>_v<N>/` | a published version: the tree, frozen, with `VERSION.json` |
+| `server_output/<lineage>/FINAL.json` | the verdict's summary for the final head |
 | `…/FINAL_VALIDATION/<version>/scenario-candidate.json` | the verdict in full: replay fidelity, correctness, per-request scores, objective |
 | `evaluation_progress/<task>.csv` | one row per finished run, read from the verdict |
 
-The lineage layout is [`server_prototypes/README.md`](../server_prototypes/README.md).
+The lineage layout is [`server_output/README.md`](../server_output/README.md).
 
 ---
 

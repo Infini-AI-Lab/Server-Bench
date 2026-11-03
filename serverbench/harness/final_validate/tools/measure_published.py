@@ -3,7 +3,7 @@
 
     $SERVERBENCH_PY serverbench/harness/final_validate/tools/measure_published.py \
         --task qwen3_5_2b_standard_1xL40 \
-        --version server_prototypes/<lineage>/<version> \
+        --version server_output/<lineage>/<version> \
         --image serverbench/evolve-agent:cu128 --model-dir <snapshot> --gpu 7
 
 Every arm runs `final_validate/scenario.py --launch` once, candidate first

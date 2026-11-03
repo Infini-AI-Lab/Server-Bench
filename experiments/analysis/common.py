@@ -15,7 +15,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 EVOLVE = REPO / "serverbench" / "evolve_space" / "evolve"
-PROTOTYPES = REPO / "server_prototypes"
+SERVER_OUTPUT = REPO / "server_output"
 LEDGER = REPO / "evaluation_progress"
 TASKS = REPO / "serving_tasks"
 FINAL_VALIDATION = REPO / "serverbench" / "artifacts" / "final_validation"
@@ -32,13 +32,13 @@ def add_paths(ap: argparse.ArgumentParser, *names: str) -> None:
     """The input and output roots a script reads, each with its repo default."""
     defaults = {
         "evolve": (EVOLVE, "run roots, <task>/<run-id>/"),
-        "prototypes": (PROTOTYPES, "published lineages and their verdicts"),
+        "server_output": (SERVER_OUTPUT, "published lineages and their verdicts"),
         "tasks": (TASKS, "task directories (contract.yaml)"),
         "out": (OUT, "where results are written and read back"),
     }
     for name in names:
         default, what = defaults[name]
-        ap.add_argument(f"--{name}", type=Path, default=default,
+        ap.add_argument(f"--{name.replace('_', '-')}", type=Path, default=default,
                         help=f"{what} (default: {display(default)})")
 
 

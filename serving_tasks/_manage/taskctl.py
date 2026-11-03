@@ -855,7 +855,7 @@ def cmd_rename(args) -> int:
     module, and its SGLang evidence under `_concurrency_search_archive/` move
     together, and every id inside them and in the referring code, tests and
     docs is rewritten. Recorded run evidence (`evolve_space/`,
-    `server_prototypes/`, `evaluation_progress/`) is never rewritten: a run
+    `server_output/`, `evaluation_progress/`) is never rewritten: a run
     keeps the id it ran under. A model or hardware change is a new task, not a rename.
     """
     old, new = args.task, args.to

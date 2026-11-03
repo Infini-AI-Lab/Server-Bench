@@ -179,8 +179,8 @@ bash experiments/analyse.sh                    # every table, into experiments/a
 DRY_RUN=1 bash experiments/analyse.sh          # the commands, in order
 ```
 
-`OUT`, `EVOLVE_ROOT` (run roots, default `serverbench/evolve_space/evolve`), `PROTOTYPES` (lineages,
-default `server_prototypes`), `REMEASURED`, `REFERENCE_DIR` and `CUTOFFS` point it elsewhere. Each script
+`OUT`, `EVOLVE_ROOT` (run roots, default `serverbench/evolve_space/evolve`), `SERVER_OUTPUT` (lineages,
+default `server_output`), `REMEASURED`, `REFERENCE_DIR` and `CUTOFFS` point it elsewhere. Each script
 in `analysis/` also runs on its own, with `--help` listing its inputs and their repository defaults. The
 result ledger itself, one row per run, is `evaluation_progress/<task>.csv`.
 

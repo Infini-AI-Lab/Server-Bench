@@ -49,15 +49,15 @@ def scan(root: Path) -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    common.add_paths(ap, "prototypes", "out")
+    common.add_paths(ap, "server_output", "out")
     args = ap.parse_args()
     rows = [r for r in common.read_csv(args.out / "final_rescored.csv")
             if r["kind"] == "final" and not r["undecided"]]
     out = []
     for r in rows:
-        tree = args.prototypes / r["lineage"] / r["version_dir"]
+        tree = args.server_output / r["lineage"] / r["version_dir"]
         if not tree.is_dir():
-            print(f"skip {r['version_dir']}: no published tree under {common.display(args.prototypes)}")
+            print(f"skip {r['version_dir']}: no published tree under {common.display(args.server_output)}")
             continue
         out.append({"task": r["task"], "run_id": r["run_id"], "agent_model": r["agent_model"],
                     "effort": r["effort"], "eligible": r["eligible"], "dpd": r["dpd"],

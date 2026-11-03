@@ -3,7 +3,7 @@
 `harbor_environment.json` records the compose overlay the environment was
 built from, which is the only statement of what the container actually got --
 and the overlay carries the agent's provider credentials as environment
-values. Evidence is copied into published prototypes, read by reports and
+values. Evidence is copied into published versions, read by reports and
 passed around when a run is being explained, so a credential in it would be a
 credential in all of those. Values are redacted.
 

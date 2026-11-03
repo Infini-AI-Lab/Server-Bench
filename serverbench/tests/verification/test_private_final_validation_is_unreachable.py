@@ -52,7 +52,7 @@ def test_the_recorded_probe_found_no_breach() -> None:
 def test_the_evidence_names_the_private_paths_it_checked() -> None:
     body = json.loads(EVIDENCE.read_text("utf-8"))
     checked = set(body["paths"])
-    for needle in ("final_validation", "serving_tasks", "server_prototypes"):
+    for needle in ("final_validation", "serving_tasks", "server_output"):
         assert any(needle in p for p in checked), (
             f"the probe never looked for {needle!r}, so its pass says nothing "
             f"about it")

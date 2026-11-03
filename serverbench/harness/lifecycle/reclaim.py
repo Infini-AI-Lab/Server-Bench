@@ -27,7 +27,7 @@ artefact of a frozen input list.
                         evidence/, profiles/, and the whole of the agent's
                         source tree
 
-The agent's source is also already published to `server_prototypes/` as one
+The agent's source is also already published to `server_output/` as one
 version per accepted boundary, so the workspace copy is a convenience, not the
 record -- but it is small, and it is kept anyway.
 

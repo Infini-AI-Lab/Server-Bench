@@ -501,7 +501,7 @@ class Lifecycle:
                     ).strftime("%Y-%m-%dT%H:%M:%SZ")
         # TIMESTAMP FIRST, so `ls` is chronological order.
         #
-        # `server_prototypes/` accumulates one directory per lineage and is
+        # `server_output/` accumulates one directory per lineage and is
         # read by eye more often than by anything else, so the newest lineage
         # sorts last. `lineage_of` derives a lineage from the PATH a seed sits
         # inside, by splitting against `lineage_root`; nothing parses this
@@ -573,7 +573,7 @@ class Lifecycle:
                 fields["destination"] = str(destination)
             self.journal.append(import_event, **fields)
         lineage_dir = Path(plan.lineage_root) / lineage_id
-        # Outside the published tree: server_prototypes/<lineage>/ is a claim
+        # Outside the published tree: server_output/<lineage>/ is a claim
         # that a lineage exists, and this is an object database. It is keyed by
         # LINEAGE and not by run, because a lineage is the chain of trees --
         # which is also what lets a later run carry its head forward and prove
@@ -3074,7 +3074,7 @@ def lineage_of(seed: Path | None, lineage_root: Path) -> str:
 
     A run started from a prototype or workspace extends THE LINEAGE THAT PATH
     IS INSIDE. Deriving it from `--seed` rather than requiring a flag keeps
-    that automatic: seeding from `server_prototypes/<lineage>/<version>/`
+    that automatic: seeding from `server_output/<lineage>/<version>/`
     continues that lineage, and seeding from the starter opens a new one.
     """
     if seed is None:

@@ -386,7 +386,7 @@ class VersionRegistry:
         #: agent produced it -- rather than sending the reader to a journal in
         #: a run directory that may have been pruned.
         self.agent = dict(agent or {})
-        # NOT created here. server_prototypes/ is the published-artifact tree,
+        # NOT created here. server_output/ is the published-artifact tree,
         # and a directory in it says a lineage exists. Creating one at run
         # startup would leave an empty lineage behind for every dry run and
         # every run that published nothing.

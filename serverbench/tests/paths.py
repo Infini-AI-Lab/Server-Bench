@@ -16,7 +16,7 @@ from pathlib import Path
 #: `serverbench/` -- the harness, its scripts and its tests.
 SERVERBENCH = Path(__file__).resolve().parent.parent
 
-#: The repository root: `serving_tasks/`, `server_prototypes/`, `evaluation_progress/`.
+#: The repository root: `serving_tasks/`, `server_output/`, `evaluation_progress/`.
 REPO = SERVERBENCH.parent
 
 #: This directory, for fixtures and helper modules that live beside the tests.

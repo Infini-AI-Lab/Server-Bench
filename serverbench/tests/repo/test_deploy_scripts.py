@@ -85,7 +85,7 @@ def test_the_mount_point_and_the_announced_model_path_agree():
     """Whatever a step mounts the model at, that is what it must announce.
 
     NOT "the path must be generic": a mount point can be a frozen contract with
-    published prototypes that hardcode it in their own `server.py` and
+    published versions that hardcode it in their own `server.py` and
     `serve.sh`, so this test checks agreement rather than taste.
 
     The real hazard is the two disagreeing -- mounting the checkpoint at one path

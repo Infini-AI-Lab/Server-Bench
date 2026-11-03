@@ -54,7 +54,7 @@ FORBIDDEN_PATHS = {
         "the private final-validation results",
     str(REPO / "serving_tasks"):
         "the task sources, including oracle traces and reference outputs",
-    str(REPO / "server_prototypes"): "other agents' artifacts",
+    str(REPO / "server_output"): "other agents' artifacts",
     "/opt/serverbench": "a conventional install location, checked in case",
 }
 

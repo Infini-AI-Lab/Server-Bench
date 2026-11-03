@@ -43,7 +43,7 @@ STOP="${STOP:-timebox}"
 # that needs a different environment declares it (see agent_environment_for).
 IMAGE="${IMAGE:-}"
 DEFAULT_IMAGE="serverbench/evolve-agent:cu128"
-LINEAGE_ROOT="${LINEAGE_ROOT:-$REPO/server_prototypes}"
+LINEAGE_ROOT="${LINEAGE_ROOT:-$REPO/server_output}"
 # An explicit SEED always wins; otherwise a task starts from its own demo/.
 SEED="${SEED:-}"
 # The offline wheelhouse, host-local and shared by every task on this machine.
