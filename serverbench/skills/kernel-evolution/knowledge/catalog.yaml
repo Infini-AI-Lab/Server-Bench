@@ -1,0 +1,116 @@
+# Machine-readable index of the kernel-evolution skill's knowledge/ tree.
+#
+# `applies_to` is what a skill routes on: an agent that has profiled its way to
+# one operator reads that operator's entries and the hardware entry, not the
+# whole corpus. Loading everything is how a context window is spent on material
+# about a different operator.
+schema_version: 1
+# Relative to the skill's own directory (where SKILL.md is); every entry's
+# `path` is relative to this root, i.e. to the directory holding this file.
+root: knowledge
+
+entries:
+  - path: hardware/hopper-sm90.md
+    title: "Hopper sm_90 — H100 and H200"
+    applies_to: [all]
+    read_when: session_start
+    summary: >
+      Register, shared-memory and bandwidth budgets; wgmma, TMA, clusters and
+      mbarrier; the warp-specialised persistent shape of a fast Hopper kernel;
+      what is Blackwell-only and does not compile here.
+
+  - path: hardware/measuring-the-machine.md
+    title: "Measuring the machine you are actually on"
+    applies_to: [all]
+    read_when: session_start
+    summary: >
+      Establishing achievable bandwidth and flops rather than trusting a
+      datasheet; the roofline question asked from the implementation rather than
+      the algorithm; the ways a timing measurement lies.
+
+  - path: profiling/choosing-the-target.md
+    title: "Choosing what to optimise, and the signature that defines it"
+    applies_to: [all]
+    read_when: before_proposing
+    summary: >
+      Whether this is a kernel problem at all; Amdahl stated as the number a
+      hypothesis must produce; the signature as the unit of optimisation.
+
+  - path: profiling/what-to-capture.md
+    title: "What a profile has to capture to be worth acting on"
+    applies_to: [all]
+    read_when: before_proposing
+    summary: >
+      Critical-path share, removable fraction, bound class, occupancy limiter,
+      launch gaps, workspace, variance — and what each one decides.
+
+  - path: attention/README.md
+    title: "Attention"
+    applies_to: [attention_prefill, attention_decode, kv_cache_append]
+    summary: >
+      Prefill and decode as different kernels; streaming softmax and the paired
+      rescale; block-level causal skipping; GQA head packing; splitting KV across
+      blocks at decode; paged cache and the stale-offset bug.
+
+  - path: gemm/README.md
+    title: "GEMM and the linear layers"
+    applies_to: [qkv_projection, output_projection, gated_mlp, lm_head]
+    summary: >
+      The prefill and decode regimes; split-K for skinny M; persistent blocks,
+      warp specialisation, swizzled SMEM, pipeline depth, vectorised epilogue;
+      which fusions pay and which do not.
+
+  - path: normalization_rope/README.md
+    title: "Normalisation, activation and position encoding"
+    applies_to: [rms_norm, qk_norm, rope, silu_mul]
+    summary: >
+      One pass, vectorised, FP32 accumulation; the two RoPE conventions; the
+      position-zero bug; the Qwen3 QK-norm trap; SwiGLU as an epilogue.
+
+  - path: sampling/README.md
+    title: "Sampling and top-k over the vocabulary"
+    applies_to: [lm_head, topk, sampling]
+    summary: >
+      Radix select and pivot bisection instead of sorting; the non-power-of-two
+      vocabulary truncation bug; grid choice by batch; deterministic tie-breaking
+      for greedy.
+
+  - path: moe/README.md
+    title: "Mixture of experts"
+    applies_to: [moe_router, moe_grouped_gemm]
+    summary: >
+      Route, permute, grouped GEMM, unpermute; load imbalance and the empty
+      expert; capacity dropping as a semantic change rather than an optimisation.
+
+  - path: communication/README.md
+    title: "Collectives, and what tensor parallelism actually costs"
+    applies_to: [all_reduce, all_gather, reduce_scatter]
+    summary: >
+      Proving sharding rather than claiming it; two collectives per layer on the
+      critical path; why TP2 at batch 1 can be slower than TP1; overlap and
+      epilogue fusion; measuring every rank.
+
+  - path: triton_cuda_patterns/README.md
+    title: "Patterns worth having in hand"
+    applies_to: [all]
+    summary: >
+      Choosing Triton or CUDA on evidence; shaping an autotune space; boundary
+      masking on load and store; 16-byte access; a worked one-pass RMS norm.
+
+  - path: verification/README.md
+    title: "Verifying a kernel, in the order that wastes the least time"
+    applies_to: [all]
+    read_when: before_believing_a_result
+    summary: >
+      The eleven rungs and what each is for; why negative controls are the most
+      valuable rung; per-dtype tolerance floors; the two failures no numerical
+      check can see.
+
+  - path: models/qwen3.md
+    title: "Qwen3 — the semantics that will trip a borrowed kernel"
+    applies_to: [all]
+    models: [Qwen/Qwen3-0.6B, Qwen/Qwen3-1.7B, Qwen/Qwen3-4B, Qwen/Qwen3-8B]
+    summary: >
+      Shapes per checkpoint; QK normalisation inside the attention block; the
+      151,936 vocabulary; GQA grouping; NeoX RoPE; the decode weight-streaming
+      floor; the substitution checklist.

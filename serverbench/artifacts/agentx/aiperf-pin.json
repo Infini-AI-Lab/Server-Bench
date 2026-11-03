@@ -1,0 +1,13 @@
+{
+ "schema": "serverbench.agentx_pin/1",
+ "remote": "https://github.com/SemiAnalysisAI/agentx-harness.git",
+ "commit": "56a0cf70f4c0359454ee4bd15a17770b541a3e3e",
+ "version": "0.12.0",
+ "digest": "8ab93f21abed7dc68b7a808df0a1ee941a2cf0ab1a18aa3feafabcc09f9e584b",
+ "file_count": 781,
+ "hashed_suffixes": [
+  ".py"
+ ],
+ "note": "The AgentX the FINAL VALIDATOR measures with. Committed so a pin change is a visible edit to this file rather than a quiet difference between two hosts. Changing the pin invalidates every measurement taken under the old one -- the same rule the three baseline container images live under. Regenerate only after a deliberate re-install, and re-measure everything afterwards.",
+ "why_digest_and_not_version": "an unrelated PyPI distribution is also called aiperf 0.12.0, so a version check proves nothing. `direct_url.json` identifies the git commit; this digest is what notices an edit to the installed files afterwards."
+}

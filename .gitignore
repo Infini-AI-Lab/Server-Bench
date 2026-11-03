@@ -1,0 +1,66 @@
+# --- credentials -------------------------------------------------------------
+# Agent credentials and generated job configs never enter the repository.
+configs/_*
+*.oauth
+.env
+.env.*
+.credentials.json
+*.credentials.json
+credentials.json
+auth.json
+*_secret.json
+*_secrets.json
+
+# --- upstream source read for research, never vendored -----------------------
+third_party/
+
+# --- environments and caches -------------------------------------------------
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+build/
+dist/
+serverbench/scripts/env.local.sh
+
+# --- agent binaries staged into the docker build context ---------------------
+serverbench/environments/_claude-bin
+serverbench/environments/_codex-bin
+serverbench/environments/_codex-code-mode-host-bin
+serverbench/environments/_codex-rg-bin
+
+# --- host-local inputs under serverbench/artifacts/ --------------------------
+# Everything here is produced per host (see serverbench/artifacts/README.md),
+# except the AgentX pin manifest and the frozen package resolutions every
+# wheelhouse is rebuilt from.
+serverbench/artifacts/*
+!serverbench/artifacts/README.md
+!serverbench/artifacts/agentx/
+!serverbench/artifacts/env-input/
+!serverbench/artifacts/env-input-int4/
+serverbench/artifacts/env-input/*
+serverbench/artifacts/env-input-int4/*
+!serverbench/artifacts/env-input/resolved.requirements.txt
+!serverbench/artifacts/env-input-int4/resolved.requirements.txt
+
+# --- run output --------------------------------------------------------------
+# Workspaces, published versions, verdicts and result rows are written by runs
+# on the operator's machine.
+serverbench/evolve_space/
+server_prototypes/*
+!server_prototypes/README.md
+evaluation_progress/*.csv
+!evaluation_progress/leaderboard.csv
+!evaluation_progress/ablations.csv
+evaluation_progress/logs/
+experiments/analysis/out/
+serving_tasks/_concurrency_search_archive/
+
+# --- generated inside a task, never committed --------------------------------
+**/tests/final_verdict/oracle/
+**/final_verdict/pool/
+serving_tasks/**/__pycache__/
+serving_tasks/**/.pytest_cache/

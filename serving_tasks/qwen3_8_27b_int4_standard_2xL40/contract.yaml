@@ -1,0 +1,146 @@
+# Created by serving_tasks/_manage/new_task.py; change it with `taskctl set`.
+kind: serving_task_contract
+schema: serverbench.task_contract/1
+task_id: qwen3_8_27b_int4_standard_2xL40
+task_hash: "88583199"   # quoted: an all-digit hash would otherwise read as a number
+title: Qwen3.8 27B INT4
+objective: dollars_per_dollar
+hardware: 2xL40
+devices: 2
+usd_per_gpu_hour: 0.82
+window_seconds: 1800
+token_prices:
+  model: redhatai/qwen3.8-27b-int4
+  usd_per_million_input: 0.0898
+  usd_per_million_cached_input: 0.0898
+  usd_per_million_output: 2.657
+  cache_rate_is: "$0.0898/M (100% of the $0.0898/M input rate), an operator convention rather than a published price"
+  source: "Estimated INT4 tariff: the OpenRouter weighted-average price of qwen/qwen3.8-27b ($0.08699/M input, $2.855/M output, operator-supplied), scaled by the ratio of the median quantized (fp8/fp4) endpoint price to the median all-endpoint price of the same model on OpenRouter (input 0.24/0.2325, output 2.35/2.525): $0.0898/M input, $2.657/M output. No market price for this INT4 checkpoint exists. Cached input operator-set at 100% of input."
+service_levels:
+- percentile: 90
+  ttft_ms: 10298.8
+  tpot_ms: 48.3769
+request_scoring:
+  kind: request_p90_billable_tokens_v4
+  gross_objective: gross_dollars_per_dollar
+  reference_task: qwen3_8_27b_int4_standard_2xL40
+  attainment_basis: profiling_request_count
+  aggregation: sum_token_value
+  request_scores:
+    p90_both: 1.0
+    otherwise: 0.0
+# model_config: the model's Hugging Face config.json at the pinned revision, verbatim;
+# written by `taskctl render` from the local snapshot, never by hand.
+model_config:
+  repo: RedHatAI/Qwen3.8-27B-INT4
+  revision: 91bd022d5b49442a868bc35008f6c21e1860edfa
+  file: config.json
+  config:
+    architectures: [Qwen3_5ForConditionalGeneration]
+    dtype: bfloat16
+    image_token_id: 248056
+    language_model_only: false
+    model_type: qwen3_5
+    quantization_config:
+      config_groups:
+        group_0:
+          format: pack-quantized
+          input_activations: null
+          output_activations: null
+          targets: [Linear]
+          weights:
+            actorder: static
+            block_structure: null
+            dynamic: false
+            group_size: 128
+            num_bits: 4
+            observer: memoryless_minmax
+            observer_kwargs: {}
+            scale_dtype: null
+            strategy: group
+            symmetric: true
+            type: int
+            zp_dtype: null
+      format: pack-quantized
+      global_compression_ratio: null
+      ignore: [model.visual.blocks.0.attn.qkv, model.visual.blocks.0.attn.proj, model.visual.blocks.0.mlp.linear_fc1, model.visual.blocks.0.mlp.linear_fc2, model.visual.blocks.1.attn.qkv, model.visual.blocks.1.attn.proj, model.visual.blocks.1.mlp.linear_fc1, model.visual.blocks.1.mlp.linear_fc2, model.visual.blocks.2.attn.qkv, model.visual.blocks.2.attn.proj, model.visual.blocks.2.mlp.linear_fc1, model.visual.blocks.2.mlp.linear_fc2, model.visual.blocks.3.attn.qkv, model.visual.blocks.3.attn.proj, model.visual.blocks.3.mlp.linear_fc1, model.visual.blocks.3.mlp.linear_fc2, model.visual.blocks.4.attn.qkv, model.visual.blocks.4.attn.proj, model.visual.blocks.4.mlp.linear_fc1, model.visual.blocks.4.mlp.linear_fc2, model.visual.blocks.5.attn.qkv, model.visual.blocks.5.attn.proj, model.visual.blocks.5.mlp.linear_fc1, model.visual.blocks.5.mlp.linear_fc2, model.visual.blocks.6.attn.qkv, model.visual.blocks.6.attn.proj, model.visual.blocks.6.mlp.linear_fc1, model.visual.blocks.6.mlp.linear_fc2, model.visual.blocks.7.attn.qkv, model.visual.blocks.7.attn.proj, model.visual.blocks.7.mlp.linear_fc1, model.visual.blocks.7.mlp.linear_fc2, model.visual.blocks.8.attn.qkv, model.visual.blocks.8.attn.proj, model.visual.blocks.8.mlp.linear_fc1, model.visual.blocks.8.mlp.linear_fc2, model.visual.blocks.9.attn.qkv, model.visual.blocks.9.attn.proj, model.visual.blocks.9.mlp.linear_fc1, model.visual.blocks.9.mlp.linear_fc2, model.visual.blocks.10.attn.qkv, model.visual.blocks.10.attn.proj, model.visual.blocks.10.mlp.linear_fc1, model.visual.blocks.10.mlp.linear_fc2, model.visual.blocks.11.attn.qkv, model.visual.blocks.11.attn.proj, model.visual.blocks.11.mlp.linear_fc1, model.visual.blocks.11.mlp.linear_fc2, model.visual.blocks.12.attn.qkv, model.visual.blocks.12.attn.proj, model.visual.blocks.12.mlp.linear_fc1, model.visual.blocks.12.mlp.linear_fc2, model.visual.blocks.13.attn.qkv, model.visual.blocks.13.attn.proj, model.visual.blocks.13.mlp.linear_fc1, model.visual.blocks.13.mlp.linear_fc2, model.visual.blocks.14.attn.qkv, model.visual.blocks.14.attn.proj, model.visual.blocks.14.mlp.linear_fc1, model.visual.blocks.14.mlp.linear_fc2, model.visual.blocks.15.attn.qkv, model.visual.blocks.15.attn.proj, model.visual.blocks.15.mlp.linear_fc1, model.visual.blocks.15.mlp.linear_fc2, model.visual.blocks.16.attn.qkv, model.visual.blocks.16.attn.proj, model.visual.blocks.16.mlp.linear_fc1, model.visual.blocks.16.mlp.linear_fc2, model.visual.blocks.17.attn.qkv, model.visual.blocks.17.attn.proj, model.visual.blocks.17.mlp.linear_fc1, model.visual.blocks.17.mlp.linear_fc2, model.visual.blocks.18.attn.qkv, model.visual.blocks.18.attn.proj, model.visual.blocks.18.mlp.linear_fc1, model.visual.blocks.18.mlp.linear_fc2, model.visual.blocks.19.attn.qkv, model.visual.blocks.19.attn.proj, model.visual.blocks.19.mlp.linear_fc1, model.visual.blocks.19.mlp.linear_fc2, model.visual.blocks.20.attn.qkv, model.visual.blocks.20.attn.proj, model.visual.blocks.20.mlp.linear_fc1, model.visual.blocks.20.mlp.linear_fc2, model.visual.blocks.21.attn.qkv, model.visual.blocks.21.attn.proj, model.visual.blocks.21.mlp.linear_fc1, model.visual.blocks.21.mlp.linear_fc2, model.visual.blocks.22.attn.qkv, model.visual.blocks.22.attn.proj, model.visual.blocks.22.mlp.linear_fc1, model.visual.blocks.22.mlp.linear_fc2, model.visual.blocks.23.attn.qkv, model.visual.blocks.23.attn.proj, model.visual.blocks.23.mlp.linear_fc1, model.visual.blocks.23.mlp.linear_fc2, model.visual.blocks.24.attn.qkv, model.visual.blocks.24.attn.proj, model.visual.blocks.24.mlp.linear_fc1, model.visual.blocks.24.mlp.linear_fc2, model.visual.blocks.25.attn.qkv, model.visual.blocks.25.attn.proj, model.visual.blocks.25.mlp.linear_fc1, model.visual.blocks.25.mlp.linear_fc2, model.visual.blocks.26.attn.qkv, model.visual.blocks.26.attn.proj, model.visual.blocks.26.mlp.linear_fc1, model.visual.blocks.26.mlp.linear_fc2, model.visual.merger.linear_fc1, model.visual.merger.linear_fc2, model.language_model.layers.0.linear_attn, model.language_model.layers.0.linear_attn.norm, model.language_model.layers.0.linear_attn.in_proj_b, model.language_model.layers.0.linear_attn.in_proj_a, model.language_model.layers.1.linear_attn, model.language_model.layers.1.linear_attn.norm, model.language_model.layers.1.linear_attn.in_proj_b, model.language_model.layers.1.linear_attn.in_proj_a, model.language_model.layers.2.linear_attn, model.language_model.layers.2.linear_attn.norm, model.language_model.layers.2.linear_attn.in_proj_b, model.language_model.layers.2.linear_attn.in_proj_a, model.language_model.layers.4.linear_attn, model.language_model.layers.4.linear_attn.norm, model.language_model.layers.4.linear_attn.in_proj_b, model.language_model.layers.4.linear_attn.in_proj_a, model.language_model.layers.5.linear_attn, model.language_model.layers.5.linear_attn.norm, model.language_model.layers.5.linear_attn.in_proj_b, model.language_model.layers.5.linear_attn.in_proj_a, model.language_model.layers.6.linear_attn, model.language_model.layers.6.linear_attn.norm, model.language_model.layers.6.linear_attn.in_proj_b, model.language_model.layers.6.linear_attn.in_proj_a, model.language_model.layers.8.linear_attn, model.language_model.layers.8.linear_attn.norm, model.language_model.layers.8.linear_attn.in_proj_b, model.language_model.layers.8.linear_attn.in_proj_a, model.language_model.layers.9.linear_attn, model.language_model.layers.9.linear_attn.norm, model.language_model.layers.9.linear_attn.in_proj_b, model.language_model.layers.9.linear_attn.in_proj_a, model.language_model.layers.10.linear_attn, model.language_model.layers.10.linear_attn.norm, model.language_model.layers.10.linear_attn.in_proj_b, model.language_model.layers.10.linear_attn.in_proj_a, model.language_model.layers.12.linear_attn, model.language_model.layers.12.linear_attn.norm, model.language_model.layers.12.linear_attn.in_proj_b, model.language_model.layers.12.linear_attn.in_proj_a, model.language_model.layers.13.linear_attn, model.language_model.layers.13.linear_attn.norm, model.language_model.layers.13.linear_attn.in_proj_b, model.language_model.layers.13.linear_attn.in_proj_a, model.language_model.layers.14.linear_attn, model.language_model.layers.14.linear_attn.norm, model.language_model.layers.14.linear_attn.in_proj_b, model.language_model.layers.14.linear_attn.in_proj_a, model.language_model.layers.16.linear_attn, model.language_model.layers.16.linear_attn.norm, model.language_model.layers.16.linear_attn.in_proj_b, model.language_model.layers.16.linear_attn.in_proj_a, model.language_model.layers.17.linear_attn, model.language_model.layers.17.linear_attn.norm, model.language_model.layers.17.linear_attn.in_proj_b, model.language_model.layers.17.linear_attn.in_proj_a, model.language_model.layers.18.linear_attn, model.language_model.layers.18.linear_attn.norm, model.language_model.layers.18.linear_attn.in_proj_b, model.language_model.layers.18.linear_attn.in_proj_a, model.language_model.layers.20.linear_attn, model.language_model.layers.20.linear_attn.norm, model.language_model.layers.20.linear_attn.in_proj_b, model.language_model.layers.20.linear_attn.in_proj_a, model.language_model.layers.21.linear_attn, model.language_model.layers.21.linear_attn.norm, model.language_model.layers.21.linear_attn.in_proj_b, model.language_model.layers.21.linear_attn.in_proj_a, model.language_model.layers.22.linear_attn, model.language_model.layers.22.linear_attn.norm, model.language_model.layers.22.linear_attn.in_proj_b, model.language_model.layers.22.linear_attn.in_proj_a, model.language_model.layers.24.linear_attn, model.language_model.layers.24.linear_attn.norm, model.language_model.layers.24.linear_attn.in_proj_b, model.language_model.layers.24.linear_attn.in_proj_a, model.language_model.layers.25.linear_attn, model.language_model.layers.25.linear_attn.norm, model.language_model.layers.25.linear_attn.in_proj_b, model.language_model.layers.25.linear_attn.in_proj_a, model.language_model.layers.26.linear_attn, model.language_model.layers.26.linear_attn.norm, model.language_model.layers.26.linear_attn.in_proj_b, model.language_model.layers.26.linear_attn.in_proj_a, model.language_model.layers.28.linear_attn, model.language_model.layers.28.linear_attn.norm, model.language_model.layers.28.linear_attn.in_proj_b, model.language_model.layers.28.linear_attn.in_proj_a, model.language_model.layers.29.linear_attn, model.language_model.layers.29.linear_attn.norm, model.language_model.layers.29.linear_attn.in_proj_b, model.language_model.layers.29.linear_attn.in_proj_a, model.language_model.layers.30.linear_attn, model.language_model.layers.30.linear_attn.norm, model.language_model.layers.30.linear_attn.in_proj_b, model.language_model.layers.30.linear_attn.in_proj_a, model.language_model.layers.32.linear_attn, model.language_model.layers.32.linear_attn.norm, model.language_model.layers.32.linear_attn.in_proj_b, model.language_model.layers.32.linear_attn.in_proj_a, model.language_model.layers.33.linear_attn, model.language_model.layers.33.linear_attn.norm, model.language_model.layers.33.linear_attn.in_proj_b, model.language_model.layers.33.linear_attn.in_proj_a, model.language_model.layers.34.linear_attn, model.language_model.layers.34.linear_attn.norm, model.language_model.layers.34.linear_attn.in_proj_b, model.language_model.layers.34.linear_attn.in_proj_a, model.language_model.layers.36.linear_attn, model.language_model.layers.36.linear_attn.norm, model.language_model.layers.36.linear_attn.in_proj_b, model.language_model.layers.36.linear_attn.in_proj_a, model.language_model.layers.37.linear_attn, model.language_model.layers.37.linear_attn.norm, model.language_model.layers.37.linear_attn.in_proj_b, model.language_model.layers.37.linear_attn.in_proj_a, model.language_model.layers.38.linear_attn, model.language_model.layers.38.linear_attn.norm, model.language_model.layers.38.linear_attn.in_proj_b, model.language_model.layers.38.linear_attn.in_proj_a, model.language_model.layers.40.linear_attn, model.language_model.layers.40.linear_attn.norm,
+        model.language_model.layers.40.linear_attn.in_proj_b, model.language_model.layers.40.linear_attn.in_proj_a, model.language_model.layers.41.linear_attn, model.language_model.layers.41.linear_attn.norm, model.language_model.layers.41.linear_attn.in_proj_b, model.language_model.layers.41.linear_attn.in_proj_a, model.language_model.layers.42.linear_attn, model.language_model.layers.42.linear_attn.norm, model.language_model.layers.42.linear_attn.in_proj_b, model.language_model.layers.42.linear_attn.in_proj_a, model.language_model.layers.44.linear_attn, model.language_model.layers.44.linear_attn.norm, model.language_model.layers.44.linear_attn.in_proj_b, model.language_model.layers.44.linear_attn.in_proj_a, model.language_model.layers.45.linear_attn, model.language_model.layers.45.linear_attn.norm, model.language_model.layers.45.linear_attn.in_proj_b, model.language_model.layers.45.linear_attn.in_proj_a, model.language_model.layers.46.linear_attn, model.language_model.layers.46.linear_attn.norm, model.language_model.layers.46.linear_attn.in_proj_b, model.language_model.layers.46.linear_attn.in_proj_a, model.language_model.layers.48.linear_attn, model.language_model.layers.48.linear_attn.norm, model.language_model.layers.48.linear_attn.in_proj_b, model.language_model.layers.48.linear_attn.in_proj_a, model.language_model.layers.49.linear_attn, model.language_model.layers.49.linear_attn.norm, model.language_model.layers.49.linear_attn.in_proj_b, model.language_model.layers.49.linear_attn.in_proj_a, model.language_model.layers.50.linear_attn, model.language_model.layers.50.linear_attn.norm, model.language_model.layers.50.linear_attn.in_proj_b, model.language_model.layers.50.linear_attn.in_proj_a, model.language_model.layers.52.linear_attn, model.language_model.layers.52.linear_attn.norm, model.language_model.layers.52.linear_attn.in_proj_b, model.language_model.layers.52.linear_attn.in_proj_a, model.language_model.layers.53.linear_attn, model.language_model.layers.53.linear_attn.norm, model.language_model.layers.53.linear_attn.in_proj_b, model.language_model.layers.53.linear_attn.in_proj_a, model.language_model.layers.54.linear_attn, model.language_model.layers.54.linear_attn.norm, model.language_model.layers.54.linear_attn.in_proj_b, model.language_model.layers.54.linear_attn.in_proj_a, model.language_model.layers.56.linear_attn, model.language_model.layers.56.linear_attn.norm, model.language_model.layers.56.linear_attn.in_proj_b, model.language_model.layers.56.linear_attn.in_proj_a, model.language_model.layers.57.linear_attn, model.language_model.layers.57.linear_attn.norm, model.language_model.layers.57.linear_attn.in_proj_b, model.language_model.layers.57.linear_attn.in_proj_a, model.language_model.layers.58.linear_attn, model.language_model.layers.58.linear_attn.norm, model.language_model.layers.58.linear_attn.in_proj_b, model.language_model.layers.58.linear_attn.in_proj_a, model.language_model.layers.60.linear_attn, model.language_model.layers.60.linear_attn.norm, model.language_model.layers.60.linear_attn.in_proj_b, model.language_model.layers.60.linear_attn.in_proj_a, model.language_model.layers.61.linear_attn, model.language_model.layers.61.linear_attn.norm, model.language_model.layers.61.linear_attn.in_proj_b, model.language_model.layers.61.linear_attn.in_proj_a, model.language_model.layers.62.linear_attn, model.language_model.layers.62.linear_attn.norm, model.language_model.layers.62.linear_attn.in_proj_b, model.language_model.layers.62.linear_attn.in_proj_a, lm_head, 're:^mtp.*']
+      kv_cache_scheme:
+        actorder: null
+        block_structure: null
+        dynamic: false
+        group_size: null
+        num_bits: 8
+        observer: static_minmax
+        observer_kwargs: {}
+        scale_dtype: null
+        strategy: tensor
+        symmetric: true
+        type: float
+        zp_dtype: null
+      quant_method: compressed-tensors
+      quantization_status: compressed
+      sparsity_config: {}
+      transform_config: {}
+      version: 0.18.1.a20260824
+    text_config:
+      attention_bias: false
+      attention_dropout: 0.0
+      attn_output_gate: true
+      bos_token_id: 248044
+      dtype: bfloat16
+      eos_token_id: 248044
+      full_attention_interval: 4
+      head_dim: 256
+      hidden_act: silu
+      hidden_size: 5120
+      initializer_range: 0.02
+      intermediate_size: 17408
+      layer_types: [linear_attention, linear_attention, linear_attention, full_attention, linear_attention, linear_attention, linear_attention, full_attention, linear_attention, linear_attention, linear_attention, full_attention, linear_attention, linear_attention, linear_attention, full_attention, linear_attention, linear_attention, linear_attention, full_attention, linear_attention, linear_attention, linear_attention, full_attention, linear_attention, linear_attention, linear_attention, full_attention, linear_attention, linear_attention, linear_attention, full_attention, linear_attention, linear_attention, linear_attention, full_attention, linear_attention, linear_attention, linear_attention, full_attention, linear_attention, linear_attention, linear_attention, full_attention, linear_attention, linear_attention, linear_attention, full_attention, linear_attention, linear_attention, linear_attention, full_attention, linear_attention, linear_attention, linear_attention, full_attention, linear_attention, linear_attention, linear_attention, full_attention, linear_attention, linear_attention, linear_attention, full_attention]
+      linear_conv_kernel_dim: 4
+      linear_key_head_dim: 128
+      linear_num_key_heads: 16
+      linear_num_value_heads: 48
+      linear_value_head_dim: 128
+      mamba_ssm_dtype: float32
+      max_position_embeddings: 262144
+      model_type: qwen3_5_text
+      mtp_num_hidden_layers: 1
+      mtp_use_dedicated_embeddings: false
+      num_attention_heads: 24
+      num_hidden_layers: 64
+      num_key_value_heads: 4
+      output_gate_type: swish
+      pad_token_id: null
+      partial_rotary_factor: 0.25
+      rms_norm_eps: 1.0e-06
+      rope_parameters:
+        mrope_interleaved: true
+        mrope_section: [11, 11, 10]
+        partial_rotary_factor: 0.25
+        rope_theta: 10000000
+        rope_type: default
+      tie_word_embeddings: false
+      use_cache: true
+      vocab_size: 248320
+    tie_word_embeddings: false
+    transformers_version: 5.16.1
+    video_token_id: 248057
+    vision_config:
+      deepstack_visual_indexes: []
+      depth: 27
+      dtype: bfloat16
+      hidden_act: gelu_pytorch_tanh
+      hidden_size: 1152
+      in_channels: 3
+      initializer_range: 0.02
+      intermediate_size: 4304
+      model_type: qwen3_5_vision
+      num_heads: 16
+      num_position_embeddings: 2304
+      out_hidden_size: 5120
+      patch_size: 16
+      spatial_merge_size: 2
+      temporal_patch_size: 2
+    vision_end_token_id: 248054
+    vision_start_token_id: 248053

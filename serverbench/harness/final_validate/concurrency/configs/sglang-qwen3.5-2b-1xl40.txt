@@ -1,0 +1,17 @@
+# SGLang launch line for Qwen/Qwen3.5-2B on one L40: the reference arm behind
+# qwen3_5_2b_*_1xL40's p90 bars (the same flags as `serve_extra` in that task's
+# reference.yaml). NEXTN speculation on the checkpoint's own MTP head, and the
+# mamba radix-cache strategy for the hybrid (Gated DeltaNet) layers. The
+# checkpoint's native 262,144-token window needs no context extension, because
+# the task drops traces above it at load time.
+# Read by `--serve-extra-file`: comments and line breaks are stripped and the
+# rest is shlex-split onto the server's command line.
+--reasoning-parser qwen3
+--tool-call-parser qwen3_coder
+--speculative-algorithm NEXTN
+--speculative-num-steps 3
+--speculative-eagle-topk 1
+--speculative-num-draft-tokens 4
+--mamba-radix-cache-strategy extra_buffer
+--enable-flashinfer-allreduce-fusion
+--mem-fraction-static 0.8

@@ -1,0 +1,23 @@
+# Created by serving_tasks/_manage/new_task.py; change it with `taskctl set`.
+kind: serving_task_contract
+schema: serverbench.task_contract/1
+task_id: {{TASK_ID}}
+task_hash: "{{TASK_HASH}}"   # quoted: an all-digit hash would otherwise read as a number
+title: {{TITLE}}
+objective: dollars_per_dollar
+hardware: {{HARDWARE}}
+devices: {{DEVICES}}
+usd_per_gpu_hour: {{USD_PER_GPU_HOUR}}
+window_seconds: 1800
+token_prices:
+  model: {{PRICE_MODEL}}
+  usd_per_million_input: {{PRICE_IN}}
+  usd_per_million_cached_input: {{PRICE_CACHED}}
+  usd_per_million_output: {{PRICE_OUT}}
+  cache_rate_is: {{CACHE_RATE_IS}}
+  source: {{PRICE_SOURCE}}
+service_levels:
+- percentile: 90
+  ttft_ms: {{P90_TTFT_MS}}
+  tpot_ms: {{P90_TPOT_MS}}
+{{REQUEST_SCORING}}

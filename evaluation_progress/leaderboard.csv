@@ -1,0 +1,40 @@
+deployment,task,gpus,rank,system,kind,agent_cli,reasoning_effort,status,dollars_per_dollar,concurrency,p90_ttft_s,p90_tpot_ms,x_best_baseline,api_cost_usd
+Qwen3.5 9B,qwen3_5_9b_standard_2xL40,2x L40,1,Claude Opus 5.5,agent,claude-code,max,passed,4.40,16,2.25,28.16,2.72,99.69
+Qwen3.5 9B,qwen3_5_9b_standard_2xL40,2x L40,2,Claude Sonnet 5.5,agent,claude-code,max,passed,4.34,20,12.34,26.76,2.68,78.60
+Qwen3.5 9B,qwen3_5_9b_standard_2xL40,2x L40,3,GPT 6 Astra,agent,codex,max,passed,3.18,12,15.62,21.94,1.96,110.81
+Qwen3.5 9B,qwen3_5_9b_standard_2xL40,2x L40,4,GPT 6.1 Sol,agent,codex,max,passed,2.84,4,2.71,23.67,1.75,13.01
+Qwen3.5 9B,qwen3_5_9b_standard_2xL40,2x L40,5,SGLang v0.5.19,baseline,,,passed,1.62,1,,,1.00,
+Qwen3.5 9B,qwen3_5_9b_standard_2xL40,2x L40,6,vLLM v0.28.0,baseline,,,passed,1.49,1,,,0.92,
+Qwen3.5 9B,qwen3_5_9b_standard_2xL40,2x L40,7,Claude Opus 5,agent,claude-code,max,passed,1.16,1,5.51,28.09,0.72,108.90
+Qwen3.5 9B,qwen3_5_9b_standard_2xL40,2x L40,8,GPT 6 Sol,agent,codex,max,passed,1.11,1,13.19,20.45,0.69,50.88
+Qwen3.5 9B,qwen3_5_9b_standard_2xL40,2x L40,9,Kimi K3,agent,claude-code,max,passed,0.93,1,4.99,33.12,0.57,126.98
+Qwen3.5 9B,qwen3_5_9b_standard_2xL40,2x L40,,Qwen3.8-Max-0902,agent,claude-code,max,not passed,,,,,,46.13
+Qwen3.5 9B,qwen3_5_9b_standard_2xL40,2x L40,,MiMo V2.6 Pro,agent,claude-code,max,not passed,,,,,,6.32
+Qwen3.5 9B,qwen3_5_9b_standard_2xL40,2x L40,,GLM 5.3,agent,claude-code,max,not passed,,,,,,16.80
+Qwen3.5 9B,qwen3_5_9b_standard_2xL40,2x L40,,DeepSeek V4.1 Flash,agent,claude-code,max,not passed,,,,,,1.64
+Gemma E4B,gemma4_e4b_it_standard_1xL40,1x L40,1,Claude Sonnet 5.5,agent,claude-code,max,passed,2.97,32,2.75,83.05,4.87,30.72
+Gemma E4B,gemma4_e4b_it_standard_1xL40,1x L40,2,Claude Opus 5.5,agent,claude-code,max,passed,2.47,40,3.01,118.59,4.05,104.25
+Gemma E4B,gemma4_e4b_it_standard_1xL40,1x L40,3,GPT 6 Astra,agent,codex,max,passed,1.75,32,4.77,94.19,2.87,119.79
+Gemma E4B,gemma4_e4b_it_standard_1xL40,1x L40,4,GPT 6.1 Sol,agent,codex,max,passed,1.59,24,4.43,72.45,2.61,13.67
+Gemma E4B,gemma4_e4b_it_standard_1xL40,1x L40,5,Claude Opus 5,agent,claude-code,max,passed,1.15,24,3.98,109.12,1.89,104.37
+Gemma E4B,gemma4_e4b_it_standard_1xL40,1x L40,6,Qwen3.8-Max-0902,agent,claude-code,max,passed,0.87,14,2.61,59.16,1.43,43.33
+Gemma E4B,gemma4_e4b_it_standard_1xL40,1x L40,7,vLLM v0.28.0,baseline,,,passed,0.61,8,,,1.00,
+Gemma E4B,gemma4_e4b_it_standard_1xL40,1x L40,8,GPT 6 Sol,agent,codex,max,passed,0.55,5,3.63,110.52,0.90,35.93
+Gemma E4B,gemma4_e4b_it_standard_1xL40,1x L40,9,Kimi K3,agent,claude-code,max,passed,0.52,6,8.67,55.32,0.85,28.71
+Gemma E4B,gemma4_e4b_it_standard_1xL40,1x L40,10,MiMo V2.6 Pro,agent,claude-code,max,passed,0.22,10,43.63,108.96,0.36,10.19
+Gemma E4B,gemma4_e4b_it_standard_1xL40,1x L40,11,SGLang v0.5.19,baseline,,,passed,0.16,2,,,0.26,
+Gemma E4B,gemma4_e4b_it_standard_1xL40,1x L40,,GLM 5.3,agent,claude-code,max,not passed,,,,,,10.79
+Gemma E4B,gemma4_e4b_it_standard_1xL40,1x L40,,DeepSeek V4.1 Flash,agent,claude-code,max,not passed,,,,,,2.07
+Qwen3.8 27B INT4,qwen3_8_27b_int4_standard_2xL40,2x L40,1,Claude Opus 5.5,agent,claude-code,max,passed,2.64,8,11.44,46.40,1.80,
+Qwen3.8 27B INT4,qwen3_8_27b_int4_standard_2xL40,2x L40,2,Claude Sonnet 5.5,agent,claude-code,max,passed,2.01,12,46.57,47.35,1.37,
+Qwen3.8 27B INT4,qwen3_8_27b_int4_standard_2xL40,2x L40,3,GPT 6 Astra,agent,codex,max,passed,1.48,4,12.96,42.83,1.01,
+Qwen3.8 27B INT4,qwen3_8_27b_int4_standard_2xL40,2x L40,4,vLLM v0.28.0,baseline,,,passed,1.47,1,,,1.00,
+Qwen3.8 27B INT4,qwen3_8_27b_int4_standard_2xL40,2x L40,5,SGLang v0.5.19,baseline,,,passed,1.42,4,,,0.97,
+Qwen3.8 27B INT4,qwen3_8_27b_int4_standard_2xL40,2x L40,6,GPT 6.1 Sol,agent,codex,max,passed,0.98,4,75.66,43.31,0.67,
+Qwen3.8 27B INT4,qwen3_8_27b_int4_standard_2xL40,2x L40,7,Claude Opus 5,agent,claude-code,max,passed,0.62,6,33.55,62.97,0.42,
+Qwen3.8 27B INT4,qwen3_8_27b_int4_standard_2xL40,2x L40,8,GPT 6 Sol,agent,codex,max,passed,0.26,2,136.48,49.53,0.18,
+Qwen3.8 27B INT4,qwen3_8_27b_int4_standard_2xL40,2x L40,,Kimi K3,agent,claude-code,max,not passed,,,,,,
+Qwen3.8 27B INT4,qwen3_8_27b_int4_standard_2xL40,2x L40,,Qwen3.8-Max-0902,agent,claude-code,max,not passed,,,,,,
+Qwen3.8 27B INT4,qwen3_8_27b_int4_standard_2xL40,2x L40,,MiMo V2.6 Pro,agent,claude-code,max,not passed,,,,,,
+Qwen3.8 27B INT4,qwen3_8_27b_int4_standard_2xL40,2x L40,,GLM 5.3,agent,claude-code,max,not passed,,,,,,
+Qwen3.8 27B INT4,qwen3_8_27b_int4_standard_2xL40,2x L40,,DeepSeek V4.1 Flash,agent,claude-code,max,not passed,,,,,,

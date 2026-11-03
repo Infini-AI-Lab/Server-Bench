@@ -1,0 +1,21 @@
+# Created by serving_tasks/_manage/new_task.py; change it with `taskctl set`.
+kind: serving_task_reference
+schema: serverbench.task_reference/1
+task_id: {{TASK_ID}}
+correctness:
+  rule: replay_fidelity_and_held_out_answers_vs_plain_checkpoint
+  reference_arm: sglang
+  answer_sample_size: 20
+  max_absolute_accuracy_drop: 0.2
+  max_token_regret: 1.0
+  eos_audit: true
+arms:
+- framework: sglang
+  serve_extra: {{SGLANG_SERVE_EXTRA}}
+- framework: vllm
+  serve_extra: {{VLLM_SERVE_EXTRA}}
+- framework: tensorrt-llm
+  serve_extra: {{TRTLLM_SERVE_EXTRA}}
+# `concurrency_search` is added once SGLang has been measured on this model and
+# hardware; its `adopted` point is the module's REFERENCE_CONCURRENCY, which the
+# instruction states as a reference (`taskctl set --reference-concurrency N`).

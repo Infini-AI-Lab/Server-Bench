@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+# Run a command holding an exclusive lock on one GPU.
+#
+# Two jobs measuring on one device produce numbers that describe neither, and
+# the symptom is a plausible-looking slow measurement rather than a crash.
+# Polling "is the device free?" cannot prevent it: between the check and the
+# launch there is always a window. A lock has no window.
+#
+#   with-gpu 3 bash some-measurement.sh ...
+#   GPU_LOCK_WAIT=7200 with-gpu 3 bash another-measurement.sh ...
+#
+# Waits by default; set GPU_LOCK_WAIT=0 to fail immediately if the device is held.
+set -euo pipefail
+
+GPU="${1:?usage: with-gpu <gpu-index[,gpu-index...]> <command...>}"
+shift
+[ $# -gt 0 ] || { echo "with-gpu: no command given" >&2; exit 2; }
+
+LOCK_DIR="${GPU_LOCK_DIR:-/tmp/serverbench-gpu-locks}"
+mkdir -p "$LOCK_DIR"
+WAIT="${GPU_LOCK_WAIT:-14400}"
+
+# One index or several. The topology tasks -- P/D on two cards, TP on four --
+# are measured across a SET of devices, and locking only the first of them is
+# the same window this script exists to close: the other cards are unguarded and
+# a second job takes one mid-run. Descriptors 9,10,11,... are taken in ascending
+# index order, so two jobs asking for overlapping sets can never deadlock
+# against each other.
+IFS=',' read -r -a GPUS <<< "$GPU"
+FD=9
+for g in $(printf '%s\n' "${GPUS[@]}" | sort -n); do
+    LOCK="$LOCK_DIR/gpu$g.lock"
+    eval "exec $FD>\"$LOCK\""
+    if ! flock -w "$WAIT" "$FD"; then
+        echo "with-gpu: GPU $g is held by another job and did not free within ${WAIT}s" >&2
+        echo "  holder: $(cat "$LOCK" 2>/dev/null || echo unknown)" >&2
+        exit 75   # EX_TEMPFAIL: not a failure of the work, a failure to get a device
+    fi
+    FD=$((FD + 1))
+done
+
+# THE CAMPAIGN CLAIM.
+#
+# A second mechanism guards cards: a campaign claim is a directory
+# `/tmp/serverbench-card-claims/gpu<N>` holding an `owner` file, which the flock
+# cannot see. So the claim is consulted here, after the flock is held, with the
+# same two rules `final_validate/lease.py` uses:
+#
+#   * a NON-NUMERIC owner is a deliberate operator hold and is respected;
+#   * a numeric owner is respected only while that process is alive -- a claim
+#     whose pid is dead is litter, not a claim.
+#
+# Nothing is signalled and nothing is reaped here. A held card is DECLINED and
+# its holder named, which is the only correct response to work we do not own.
+CLAIM_DIR="${SERVERBENCH_CARD_CLAIMS:-/tmp/serverbench-card-claims}"
+for g in "${GPUS[@]}"; do
+    owner_file="$CLAIM_DIR/gpu$g/owner"
+    [ -r "$owner_file" ] || continue
+    owner="$(cat "$owner_file" 2>/dev/null || true)"
+    [ -n "$owner" ] || continue
+    case "$owner" in
+        *[!0-9]*)
+            echo "with-gpu: GPU $g carries a campaign claim held by '$owner'," >&2
+            echo "  which is a deliberate reservation and is never reaped." >&2
+            exit 75 ;;
+        *)
+            if kill -0 "$owner" 2>/dev/null; then
+                echo "with-gpu: GPU $g is claimed by pid $owner, which is alive." >&2
+                echo "  The flock and the campaign claim are separate mechanisms and" >&2
+                echo "  this is the one the flock cannot see. Declining rather than" >&2
+                echo "  contending: a shared device is not a measurement." >&2
+                [ -r "$CLAIM_DIR/gpu$g/what" ] && \
+                    echo "  claim says: $(cat "$CLAIM_DIR/gpu$g/what")" >&2
+                exit 75
+            fi ;;
+    esac
+done
+
+# The lock only excludes OUR jobs. On a shared host a device can be busy with
+# someone else's work; taking our lock on it succeeds and then runs into an
+# out-of-memory failure, or into a measurement of a contended device.
+#
+# So after the lock is held, check the device is actually free. Foreign work is
+# never signalled, never stopped and never waited out here: it is not ours, and
+# the only correct response is to decline the device and say whose it is. Set
+# GPU_ALLOW_BUSY=1 to proceed anyway (for a non-measuring job that only needs a
+# slice, and knows it).
+for g in "${GPUS[@]}"; do
+    BUSY_MB="$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits -i "$g" 2>/dev/null || echo 0)"
+    if [ "${GPU_ALLOW_BUSY:-0}" != 1 ] && [ "${BUSY_MB:-0}" -gt 4000 ]; then
+        echo "with-gpu: GPU $g already has ${BUSY_MB} MiB in use by work this lock" >&2
+        echo "  does not cover. A contended device is not a measurement, and nothing" >&2
+        echo "  here will stop a process it does not own." >&2
+        nvidia-smi --query-compute-apps=pid,used_memory,process_name \
+                   --format=csv,noheader -i "$g" 2>/dev/null | sed 's/^/  /' >&2 || true
+        echo "  Pick a free device, or set GPU_ALLOW_BUSY=1 if you genuinely only" >&2
+        echo "  need a slice and are not measuring." >&2
+        exit 75   # EX_TEMPFAIL: not a failure of the work, a failure to get a device
+    fi
+done
+
+# Recorded inside the lock so a person can see who holds it. `flock` releases on
+# exit of this shell, including a kill, so a crashed job never strands a device.
+# Into every lock this job holds, not just the first, so whichever lockfile a
+# person reads names the holder.
+_fd=9
+for _ in "${GPUS[@]}"; do
+    eval "printf 'pid %s  since %s  cmd %s\n' \"\$\$\" \"\$(date -u +%H:%M:%SZ)\" \"\$*\" >&$_fd" || true
+    _fd=$((_fd + 1))
+done
+
+echo "[with-gpu] holding GPU(s) $GPU for: $*"
+"$@"

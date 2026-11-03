@@ -1,0 +1,74 @@
+# Created by serving_tasks/_manage/new_task.py; change it with `taskctl set`.
+kind: serving_task_reference
+schema: serverbench.task_reference/1
+task_id: qwen3_8_27b_int4_standard_2xL40
+correctness:
+  rule: replay_fidelity_and_held_out_answers_vs_plain_checkpoint
+  reference_arm: sglang
+  answer_sample_size: 20
+  max_absolute_accuracy_drop: 0.2
+  max_token_regret: 4.0
+  eos_audit: true
+arms:
+- framework: sglang
+  serve_extra: "--context-length 1048576 --json-model-override-args '{\"text_config\":{\"max_position_embeddings\":1048576,\"rope_parameters\":{\"rope_type\":\"yarn\",\"factor\":4.0,\"original_max_position_embeddings\":262144,\"mrope_interleaved\":true,\"mrope_section\":[11,11,10],\"rope_theta\":10000000,\"partial_rotary_factor\":0.25}}}' --mem-fraction-static 0.90 --max-running-requests {concurrency}"
+- framework: vllm
+  serve_extra: "--max-model-len 1048576 --hf-overrides '{\"text_config\":{\"max_position_embeddings\":1048576,\"rope_parameters\":{\"rope_type\":\"yarn\",\"factor\":4.0,\"original_max_position_embeddings\":262144,\"mrope_interleaved\":true,\"mrope_section\":[11,11,10],\"rope_theta\":10000000,\"partial_rotary_factor\":0.25}}}' --gpu-memory-utilization 0.90 --max-num-seqs {concurrency}"
+- framework: tensorrt-llm
+  serve_extra: ""
+# sglang_settings: generated from arms[sglang].serve_extra by `taskctl render`;
+# change the launch line, not this block.
+sglang_settings:
+  image: lmsysorg/sglang:v0.5.19
+  context-length: 1048576
+  json-model-override-args: '{"text_config":{"max_position_embeddings":1048576,"rope_parameters":{"rope_type":"yarn","factor":4.0,"original_max_position_embeddings":262144,"mrope_interleaved":true,"mrope_section":[11,11,10],"rope_theta":10000000,"partial_rotary_factor":0.25}}}'
+  mem-fraction-static: 0.9
+  max-running-requests: '{concurrency}'
+# `concurrency_search` is added once SGLang has been measured on this model and
+# hardware; its `adopted` point is the module's REFERENCE_CONCURRENCY, which the
+# instruction states as a reference (`taskctl set --reference-concurrency N`).
+concurrency_search:
+  arm: sglang
+  image: lmsysorg/sglang:v0.5.19
+  window_seconds: 1800
+  selection_rule: operator_confirmed_concurrency_4_skip_search
+  adopted: 4
+  random_seeds: fresh per run
+  points: []
+  slo_derivation:
+    rule: the worst (highest) over 5 random seeds of SGLang's per-run p90 TTFT and p90 TPOT, at the searched operating point
+    sglang_worst_p90_ttft_ms: 10298.7629086
+    sglang_worst_p90_tpot_ms: 48.3768652660332
+    multiplier: 1.0
+    # taskctl writes a bar to 6 significant figures (`:g`); the calibration
+    # rounded each worst UP to that precision so the bar is never tighter than
+    # what SGLang measured.
+    published_rounding: up to 6 significant figures
+    p90_ttft_ms: 10298.8
+    p90_tpot_ms: 48.3769
+    runs:
+    - label: slo-c4-s1
+      random_seed: 6372596384082955518
+      ttft_p90_ms: 9192.2596473
+      tpot_p90_ms: 48.3768652660332
+      gross_dollars_per_dollar: 2.0239
+    - label: slo-c4-s2
+      random_seed: 4888337736067788016
+      ttft_p90_ms: 10294.414434
+      tpot_p90_ms: 31.438640895959594
+      gross_dollars_per_dollar: 1.7378
+    - label: slo-c4-s3
+      random_seed: 874487735974929204
+      ttft_p90_ms: 6464.311496600005
+      tpot_p90_ms: 29.544332377525162
+      gross_dollars_per_dollar: 1.5733
+    - label: slo-c4-s4
+      random_seed: 6684595718078497394
+      ttft_p90_ms: 4099.1276196
+      tpot_p90_ms: 27.960535427002643
+      gross_dollars_per_dollar: 1.4033
+    - label: slo-c4-s5
+      random_seed: 7589457866696367346
+      ttft_p90_ms: 10298.7629086
+      tpot_p90_ms: 37.11542595322131
+      gross_dollars_per_dollar: 1.3457

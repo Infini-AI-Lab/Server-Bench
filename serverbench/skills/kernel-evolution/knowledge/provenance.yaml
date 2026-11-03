@@ -1,0 +1,170 @@
+# Where every claim in this knowledge/ tree came from, and what was done with it.
+#
+# Three dispositions, and the distinction is the point:
+#
+#   COPIED    the artefact is here, under a licence that permits it.
+#   DISTILLED the artefact is NOT here. Someone read it, understood the
+#             principle, and wrote original prose. Nothing is reproduced.
+#   EXCLUDED  read, and deliberately left out, with the reason recorded.
+#
+# Nothing in this tree is COPIED. That is not caution about licences alone: a
+# kernel pasted from a production repository is not a kernel this agent designed,
+# and what the benchmark asks is what the agent can do.
+schema_version: 1
+retrieved: at the pinned commit below
+
+adapted_from:
+  repository: kernel_evolve_vllm
+  origin: https://github.com/Infini-AI-Lab/kernel_evolve_vllm
+  commit: 9b56664d7d7efa85eea0678462c2565bf4f8266e
+  working_tree: dirty
+  license: NONE-DECLARED (no LICENSE file at the repository root)
+  license_status: >
+    No LICENSE file exists in the source repository. It is treated as
+    owner-internal material, adapted under the owner's explicit authorisation,
+    and every adaptation is DISTILLED rather than COPIED — so the
+    result carries no upstream text whose licence would need to be resolved. This
+    is recorded rather than assumed: if the source repository is ever published
+    under a licence, this file is where the question gets re-asked.
+  read_only: true
+  note: >
+    The source repository remains read-only and is not the active source of
+    truth. Nothing here depends on a path inside it.
+
+sources:
+  - id: source-claude-reference
+    what: >
+      Distilled workflow documentation from the source repository's .claude/docs
+      tree — the verification invariants, the anti-cheat rule, the candidate
+      layout, and the "pick your workload target" argument.
+    disposition: DISTILLED
+    license: NONE-DECLARED (inherits the source repository's status)
+    files_inspected:
+      - .claude/docs/reference/verify.md
+      - .claude/docs/reference/anti_cheat.md
+      - .claude/docs/reference/candidate_layout.md
+      - .claude/docs/reference/kernels.md
+      - .claude/docs/reference/workload_targets.md
+    informs:
+      - verification/README.md
+      - profiling/choosing-the-target.md
+    what_survived: >
+      The verification ladder's ordering and the reasoning behind it; the
+      dispatch-only anti-cheat rule and why no numerical check can catch it; the
+      signature — not the operator — as the unit of optimisation; the
+      light/heavy "settings" idea, which the source itself had deprecated in
+      favour of distinct signatures, and which is therefore absent here.
+    what_did_not: >
+      Every repository-specific path, command, registry name, six-file directory
+      format and hub-publication step. Those describe a different system.
+
+  - id: source-knowledge-patterns
+    what: >
+      The source repository's knowledge/patterns and knowledge/hardware notes:
+      GEMM tiling and pipelining, flash-attention structure, top-k selection,
+      autotune space shaping, and per-architecture budgets.
+    disposition: DISTILLED
+    license: NONE-DECLARED (inherits the source repository's status)
+    files_inspected:
+      - knowledge/index.md
+      - knowledge/patterns/design_principles.md
+    informs:
+      - gemm/README.md
+      - attention/README.md
+      - sampling/README.md
+      - triton_cuda_patterns/README.md
+      - hardware/hopper-sm90.md
+    what_survived: >
+      Algorithmic principles: persistent work queues, producer/consumer warp
+      specialisation, swizzled shared memory, pipeline depth against the
+      shared-memory budget, streaming softmax with paired rescale, block-level
+      causal skipping, GQA head packing, radix select and pivot bisection,
+      split-K for skinny M.
+    what_did_not: >
+      All of it was written for SM 12.0 and SM 10.0 — Blackwell consumer and
+      datacentre parts. The hardware notes here are re-derived for sm_90 (Hopper),
+      which has wgmma, TMA and clusters that those parts lack or differ on, and
+      lacks tcgen05 and FP4 that they have. Numbers were not carried across; a
+      budget copied from a different architecture is worse than no budget.
+
+  - id: source-skills
+    what: >
+      The source repository's kernel skills — fusion decision-making, hardware
+      reference, profiler-report reading.
+    disposition: DISTILLED
+    license: NONE-DECLARED (inherits the source repository's status)
+    files_inspected:
+      - skills/KernelFusion/SKILL.md
+      - skills/ncu-report-skill/SKILL.md
+      - skills/KernelWiki/SKILL.md
+    informs:
+      - profiling/what-to-capture.md
+      - gemm/README.md
+      - ../ (the kernel-evolution skill this tree belongs to)
+    what_survived: >
+      The fusion decision process (fuse to remove a round trip, not to reduce a
+      kernel count), the bound-class taxonomy and what each class implies about
+      which lever to reach for, and the profile fields that turn an observation
+      into a hypothesis.
+    what_did_not: >
+      The megakernel skill tree in its entirety — see `excluded` below.
+
+  - id: model-configuration
+    what: Qwen3 architecture facts.
+    disposition: DISTILLED
+    informs: [models/qwen3.md]
+    license: Apache-2.0 (Qwen3 model cards and configuration)
+    files_inspected:
+      - "~/.cache/huggingface/hub/models--Qwen--Qwen3-{0.6B,1.7B,4B,8B}/snapshots/*/config.json"
+    source: >
+      The published Qwen3 model cards and the `config.json` of the locally cached
+      checkpoints. Shapes are stated for orientation and the file says to read the
+      checkpoint rather than the table.
+
+  - id: vendor-architecture-documentation
+    what: Hopper architecture capabilities and budgets.
+    disposition: DISTILLED
+    informs: [hardware/hopper-sm90.md, hardware/measuring-the-machine.md]
+    license: vendor documentation, read only; no text reproduced
+    files_inspected:
+      - "NVIDIA Hopper architecture and CUDA/PTX programming documentation (public)"
+    source: >
+      NVIDIA's published Hopper architecture and PTX/CUDA programming
+      documentation. Figures are vendor claims and are labelled as starting
+      points; the file's first instruction is to measure the host instead.
+
+excluded:
+  - id: megakernel-subsystem
+    what: >
+      The source repository's schedule-compiler and virtual-machine subsystem for
+      single persistent whole-model kernels, together with its skill tree,
+      reference examples and generated contracts.
+    disposition: EXCLUDED
+    reason: >
+      Out of scope for this harness, and structurally incompatible with it: it asks a different research question, needs a
+      schedule compiler and a virtual machine before it computes anything, and
+      does not compose with an ordinary composable-kernel candidate loop.
+    enforcement: >
+      kernel_evolve.verification.scan scans the package, the skills (this tree
+      included) and the built distribution, and fails rather than warns. This entry names
+      the excluded material on purpose: that is how a reader learns it was left
+      out deliberately rather than lost.
+
+  - id: upstream-serving-frameworks
+    what: SGLang, vLLM and TensorRT-LLM source.
+    disposition: EXCLUDED
+    reason: >
+      Never vendored, in any form, translated or otherwise. An agent that can read
+      a production serving framework's implementation is answering a different
+      question from the one this benchmark asks.
+
+  - id: reference-operator-implementations
+    what: >
+      The source repository's reference/ tree of torch reference implementations
+      for sparse attention, MoE, quantisation and linear-attention operators.
+    disposition: EXCLUDED
+    reason: >
+      They are references for operators outside this harness's scope, and they
+      are executable implementations rather than knowledge. A reference belongs to
+      a kernel task's frozen contract, where it is hashed and provenance-tracked,
+      not to a knowledge tree an agent browses.

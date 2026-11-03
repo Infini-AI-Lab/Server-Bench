@@ -1,0 +1,66 @@
+schema_version = "1.1"
+
+[task]
+name = "serverbench/qwen3_5_9b_standard_modal_2xL40S"
+description = "Two L40S cards hold only a fraction of these agentic sessions' working set and the replay draws from 393. Under a hard TTFT tail, how much correctly served work can a system deliver for one dollar of those cards' time -- when every eviction is paid for twice, in the latency of the re-prefill and in the GPU-seconds it burns producing nothing new?"
+authors = []
+keywords = ["serverbench", "llm-serving", "dollars_per_dollar"]
+
+[metadata]
+suite = "serverbench"
+group = "serving"
+category = "serving-system-evolution"
+task_id = "qwen3_5_9b_standard_modal_2xL40S"
+objective = "dollars_per_dollar"
+devices = 2
+
+# REQUEST SCORING (request_p90_billable_tokens_v4). There is no hard latency gate: every
+# profiling request that meets BOTH p90 bars below scores 1, every other
+# request scores 0. Bill only qualifying requests' input/output token value,
+# divided by the full GPU-time cost. Correctness and replay fidelity remain hard
+# eligibility gates. Frozen before any agent sees the task. Regenerated from
+# `contract.yaml`.
+single_objective = "dollars_per_dollar"
+hard_gates = false
+hard_correctness_and_replay_gates = true
+request_scoring_kind = "request_p90_billable_tokens_v4"
+gate_p90_ttft_ms = 10000.0
+gate_p90_tpot_ms = 60.0
+gate_replay_fidelity = true
+harbor_version = "0.15.0"
+
+[verifier]
+timeout_sec = 3600.0
+# The verifier gets its OWN container rather than reusing the agent's: Harbor's
+# default puts `tests/` into the container the agent just used, which is safe
+# only because AGENT_END precedes the verifier -- a timing guarantee, and this
+# fleet has had processes outlive what should have ended them.
+environment_mode = "separate"
+
+[agent]
+timeout_sec = 14400.0
+
+# ----------------------------------------------------------------- MODAL MODE
+#
+# The container is a MODAL SANDBOX, created by `serving_tasks/_modal/modalctl.py`
+# from the same two Dockerfiles this repository builds locally -- our image,
+# adapted, not a second one. See `_template/modal/MODE.md`.
+#
+# This block is still what a LOCAL Harbor run would use, and it is kept
+# accurate on purpose: a modal-mode task must remain runnable on a host that
+# has the cards, and the only difference between the two is where the sandbox
+# comes from. `modalctl` does not read it.
+[environment]
+type = "docker"
+build_timeout_sec = 3600.0
+cpus = 8
+memory_mb = 65536
+storage_mb = 122880
+override_gpus = 0
+gpus = 0
+extra_docker_compose = ["configs/gpu_overlay_nvidia.yaml"]
+network_mode = "no-network"
+
+[verifier.env]
+
+[environment.env]

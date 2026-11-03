@@ -1,0 +1,172 @@
+# Provenance for the distilled serving-systems knowledge in this bundle.
+#
+# The prose, diagrams, checklists and templates here are ORIGINAL. They were
+# written after reading the pinned upstream source below, to understand what
+# these systems actually do and — more usefully — which failure modes their
+# structure exists to prevent.
+#
+# No upstream source file, excerpt, translation or private implementation is
+# reproduced in this bundle. Upstream names appear only where a name is the
+# clearest way to identify a concept. The bundle is checked against that rule by
+# `serverbench evolve skill serverbench/skills_instructed/serving-system-evolution-instructed`.
+#
+# The checkouts themselves are read-only, outside this repository, gitignored,
+# never built, never executed, never benchmarked. No model weights or engines
+# were downloaded.
+
+schema_version: 1
+bundle: serving-system-evolution-instructed
+distilled_by: reading pinned source plus current official documentation and engineering posts
+
+sources:
+  - name: Evidence-loop audit research
+    sources:
+      - https://arxiv.org/html/2609.20519v1
+      - https://arxiv.org/html/2506.13131v1
+      - https://arxiv.org/html/2505.22954v2
+      - https://github.com/sgl-project/sglang/releases
+      - https://github.com/vllm-project/vllm/releases
+      - https://github.com/sgl-project/sglang/pull/34184
+      - https://github.com/sgl-project/sglang/pull/33758
+      - https://github.com/vllm-project/vllm/pull/48674
+    scope: >-
+      Original loop guidance and a local public-trial orchestrator. Research
+      principles and upstream regression cases, not claims of local performance
+      transfer. No upstream implementation copied. See reference 09.
+  - name: SGLang
+    repository: https://github.com/sgl-project/sglang
+    commit: 81df6f2c5791ca2eec782dc25a8a1badc378bf24
+    license: Apache-2.0
+    retrieved: at the pinned commit above
+    checkout: read-only, outside the repository, gitignored, never built or run
+    files_inspected:
+      - python/sglang/srt/managers/scheduler.py
+      - python/sglang/srt/managers/schedule_batch.py
+      - python/sglang/srt/managers/schedule_policy.py
+      - python/sglang/srt/mem_cache/  (layout and module inventory)
+      - python/sglang/srt/model_executor/  (layout)
+    what_was_learned:
+      - >-
+        The batch is layered: a CPU-side scheduling batch carrying policy state,
+        converted by the runner into a device-side forward batch of tensors. The
+        scheduler never holds a device pointer.
+      - >-
+        Overlap is implemented as a one-batch lag: launch batch N, then process
+        the result of batch N-1 from a queue. The loop knows when overlap must be
+        disabled for a particular batch and drains first.
+      - >-
+        There are explicit barriers around result processing, because host state
+        the previous forward still reads cannot be mutated yet.
+
+  - name: vLLM
+    repository: https://github.com/vllm-project/vllm
+    commit: ae256289956945c750d5b3cd13848dc734501a6d
+    license: Apache-2.0
+    retrieved: at the pinned commit above
+    checkout: read-only, outside the repository, gitignored, never built or run
+    files_inspected:
+      - vllm/v1/core/sched/scheduler.py
+      - vllm/v1/core/sched/async_scheduler.py
+      - vllm/v1/core/sched/interface.py
+      - vllm/v1/core/sched/output.py
+      - vllm/v1/core/kv_cache_manager.py
+      - vllm/v1/core/block_pool.py
+      - vllm/v1/core/kv_cache_coordinator.py
+      - vllm/v1/request.py
+      - vllm/v1/engine/  (layout and module inventory)
+    what_was_learned:
+      - >-
+        The scheduler has no prefill phase and no decode phase. Each request
+        carries how many of its tokens are already computed and how many it needs;
+        every step hands out tokens under one budget. Chunked prefill, prefix
+        reuse and speculative decoding all fall out of that single accounting
+        rather than each being a special case.
+      - >-
+        Cache blocks live in a pool addressed by content hash, with reference
+        counts, an eviction path, and a distinction between caching a full block
+        and caching a partial one.
+      - >-
+        Asynchronous scheduling works by letting a request carry placeholders for
+        tokens it has not produced yet, so step N+1 can be planned before step N's
+        output exists, and reconciling them when the real tokens arrive.
+      - >-
+        Freeing a block is deferred while an in-flight step might still read it.
+
+  - name: TensorRT-LLM
+    repository: https://github.com/NVIDIA/TensorRT-LLM
+    commit: f51e32335aefdc39c4118a0ab0ce5f5196623711
+    license: Apache-2.0 (repository LICENSE; NVIDIA copyright)
+    retrieved: at the pinned commit above
+    checkout: >-
+      shallow, blobless, sparse (runtime executor paths only), read-only, outside
+      the repository, gitignored, never built or run. No engine was ever built.
+    files_inspected:
+      - tensorrt_llm/_torch/pyexecutor/py_executor.py
+      - tensorrt_llm/_torch/pyexecutor/kv_cache_manager_v2.py
+      - tensorrt_llm/_torch/pyexecutor/model_engine.py  (structure)
+      - tensorrt_llm/_torch/pyexecutor/  (module inventory)
+    what_was_learned:
+      - >-
+        The overlap loop keeps the previous batch explicitly and must wait for the
+        host-to-device input copy to complete before the scheduler is allowed to
+        modify the host-side page table. The hazard is that overlap makes host
+        memory concurrently readable by the device.
+      - >-
+        Resource managers can refuse or revert an allocation mid-schedule, so the
+        scheduler has to be able to unwind a plan it has already partly built.
+      - >-
+        A hang detector and explicit iteration checkpoints exist because an
+        asynchronous loop's most common failure is not a crash but a stall.
+
+documentation_sources:
+  - publisher: SGLang Project and LMSYS Org
+    entry_points:
+      - https://docs.sglang.io/
+      - https://docs.sglang.io/cookbook/intro
+      - https://www.lmsys.org/blog/
+    areas_reviewed:
+      - runtime architecture and hyperparameter tuning
+      - attention backend compatibility and page-size trade-offs
+      - RadixAttention, cache-aware scheduling, and HiCache tiering
+      - chunked prefill, scheduler overlap, and CUDA graph variants
+      - speculative decoding, MTP, structured output, and reasoning parsers
+      - data/attention/expert parallelism and prefill-decode disaggregation
+      - benchmark levels, Nsight profiling, and production metrics
+    interpretation: >-
+      Current docs establish available mechanisms and compatibility questions.
+      Cookbook and blog configurations are treated as hardware/model-specific
+      case studies, never as benchmark defaults.
+
+  - publisher: vLLM Project
+    entry_points:
+      - https://docs.vllm.ai/en/stable/
+      - https://vllm.ai/blog/
+    areas_reviewed:
+      - V1 API/EngineCore/worker architecture and unified token scheduling
+      - paged KV, automatic prefix caching, cache identity, and metrics
+      - scheduler controls, continuous batching, compilation, and CUDA graphs
+      - speculative decoding, data/parallel deployment, and P/D connectors
+      - quantized KV cache, LoRA, structured output, and reasoning output
+      - AgentX workload methodology and bottleneck-led optimization studies
+    interpretation: >-
+      Stable docs and project posts inform the feature references. Every flag,
+      backend, connector, and optimization must still be checked against the
+      installed task revision, checkpoint, dtype, L40 capability, and topology.
+
+exclusions_verified:
+  - no upstream source file is present in this bundle
+  - no distinctive excerpt or translated implementation is present
+  - no vendored repository or submodule
+  - no framework binary, container, model asset or generated engine
+  - no path into a local checkout appears in any distributed file
+  - upstream class and module names are not reused for this bundle's templates,
+    so that a reader cannot mistake a template for a copy
+
+review:
+  method: >-
+    Automated marker scan (implementation-level imports, class definitions and
+    private module paths) plus a read of every distributed file. The scan is
+    conservative: it can flag prose that quotes an identifier, which a reviewer
+    resolves by looking, and it cannot miss a copied source file.
+  command: serverbench evolve skill serverbench/skills_instructed/serving-system-evolution-instructed
+  result: clean

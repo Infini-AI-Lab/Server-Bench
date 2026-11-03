@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+"""The production entrypoint for an evolve run. There is exactly one.
+
+    serverbench/scripts/evolve --task <task dir> --gpu N --hours H \
+        --model-dir ... --env-input ... --lineage-root server_prototypes
+
+Operators normally launch through `scripts/server_evolve/evolve-task.sh`, which
+fills these in and passes the task's own `demo/` as `--seed` unless `SEED` is
+set.
+
+Add `--dry-run` to build and boot a workspace without launching an agent; that
+allocates in the scratch namespace and consumes no production run id.
+
+This file contains no logic. It exists so there is one name to run and one
+place that puts the harness on the path -- the argument parsing, the lifecycle
+and every decision live in `serverbench/harness/lifecycle/run.py`.
+"""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "harness"))
+
+from lifecycle.run import main  # noqa: E402
+
+if __name__ == "__main__":
+    raise SystemExit(main())

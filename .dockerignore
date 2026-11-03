@@ -1,0 +1,24 @@
+# The build context is the repository root, and the repository root holds many
+# gigabytes no image layer wants: model weights, a wheelhouse that is mounted
+# read-only rather than copied, the vendored harbor tree, and every run's
+# evidence. Sending them to the daemon costs minutes per build and buys nothing.
+#
+# What the image builds DO need from the context is named as an exception below,
+# because a deny-by-default list that someone later adds a file to is a build that
+# breaks for a reason nobody can see.
+*
+!serverbench/environments/_claude-bin
+!serverbench/environments/_codex-bin
+!serverbench/environments/_codex-code-mode-host-bin
+!serverbench/environments/_codex-rg-bin
+!serverbench/environments/serving-agent/restrict-network.sh
+# The build context is the repository ROOT, so this needs its
+# `serverbench/` prefix like the un-ignores above it; without it the broad
+# ignore wins and the build fails with "not found".
+!serverbench/artifacts/env-input/uv-binary/uv
+# ONE wheel out of the wheelhouse, and only because
+# `torch.utils.cpp_extension` refuses to build without it. The rest of the
+# wheelhouse is mounted read-only at run time and must not be copied; naming
+# the file exactly keeps the exception that narrow.
+!serverbench/artifacts/env-input/wheelhouse/ninja-1.13.2-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
+!serverbench/environments/evolve-agent/toolchain_smoke.py

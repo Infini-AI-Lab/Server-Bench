@@ -1,0 +1,16 @@
+# Run outputs are regenerable and large (they contain full candidate repos).
+runs/
+*.egg-info/
+__pycache__/
+*.py[cod]
+.venv/
+uv.lock
+
+# Substrate-validation output: curated reports plus RAW agent/container logs.
+# Ignored so a log that echoed an environment can never be committed.
+harbor_evolve_status/
+
+# Credentials never belong in the tree; these patterns are a backstop only.
+oauth.env
+*.token
+.env

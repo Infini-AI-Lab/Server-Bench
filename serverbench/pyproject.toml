@@ -1,0 +1,97 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "serverbench"
+version = "0.1.0"
+description = "An autonomous serving-system evolution harness"
+readme = "README.md"
+# 3.10 is the floor because the evolution harness resolves field
+# annotations at runtime to rebuild nested contracts from JSON, and PEP 604
+# unions (`str | None`) are only resolvable at runtime from 3.10 onwards.
+requires-python = ">=3.10"
+# The harness core is stdlib-only by design: it must be able to verify a
+# candidate inside a bare image. PyYAML is needed only for .yaml task files
+# (.json tasks work with no dependencies at all).
+dependencies = ["pyyaml>=5.4", "matplotlib>=3.8"]
+
+[project.optional-dependencies]
+# `jinja2` is a test dependency, not a harness one (the core is stdlib-only):
+# `transformers.apply_chat_template` renders a chat template with it, so a test
+# that builds a prompt through a real tokenizer cannot run without it.
+# `ruff>=0.16` is the first release that reports syntax needing a newer
+# interpreter than `target-version` (for example a multi-line f-string
+# replacement field), so a clean lint run is evidence the tree loads on 3.10.
+dev = ["pytest>=7.0", "ruff>=0.16", "ty>=0.0.1a1", "jinja2>=3.0"]
+
+[project.scripts]
+serverbench = "serverbench.cli:main"
+
+[tool.setuptools.packages.find]
+# One root, five top-level packages: `lifecycle` (the evolve driver),
+# `serving_evolve` (shared contracts and the `serverbench evolve` CLI),
+# `kernel_evolve` (the kernel-evolution subsystem), `final_validate` (the final
+# verdict) and `serverbench` (the console script). See serverbench/harness/README.md.
+#
+# `final_validate` is importable from the root like the others (`scripts/env.sh`
+# and the editable install put `harness/` on the path) but is never built into a
+# distribution: it carries `private_correctness.py`, which is host-only.
+where = ["harness"]
+exclude = ["final_validate", "final_validate.*"]
+
+[tool.ruff]
+# What a repo-wide `ruff check .` must not sweep. None of it is ours to style.
+#
+#   evolve_space/  every run's workspace -- agent-written code captured as
+#               evidence. Linting it would edit the record of what an agent
+#               actually produced.
+#   artifacts/  models, container inputs and isolation evidence.
+#   skills/     two vendored upstream clones, tracked as submodules.
+#
+# Each task's `demo/` starter is excluded for a different reason: it is the
+# control arm every speedup is measured against, and it is deliberately naive.
+# Restyling it changes a frozen input.
+exclude = [
+    "evolve_space", "artifacts", "skills", ".venv", "../serving_tasks/*/demo",
+]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM"]
+ignore = ["B008", "N818"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["harness"]
+# Two tiers, so a change can be checked without paying for the whole suite.
+# `slow` is the honest name: those tests shell out or drive docker, and they are
+# the ones worth having when a deploy path changes. Everything else runs in
+# process. Neither tier is optional in CI -- the split is for the loop a person
+# is actually in, not for deciding what to skip.
+#
+#   pytest serverbench/tests -m "not slow"   # in-process only
+#   pytest serverbench/tests/contracts       # one subject
+#
+markers = [
+    "slow: shells out or drives docker; seconds rather than milliseconds",
+    "host: reads evidence recorded on a deployed host (run `pytest -m host` there)",
+]
+addopts = "-m 'not host'"
+
+[tool.ty.src]
+# The harness core is what strict typing is scoped to. Adapters that wrap a
+# framework are checked too, but their imports are lazy and optional.
+include = ["harness/serving_evolve", "harness/kernel_evolve"]
+
+[tool.ty.environment]
+# The package root, so the checker resolves `serving_evolve` the same way the
+# build and the tests do.
+extra-paths = ["harness"]
+
+[tool.ty.rules]
+# torch and transformers are optional: only the HF oracle adapter imports them,
+# and only inside a function, so the harness runs in an environment that has
+# neither. An unresolved import here is the design, not a defect.
+unresolved-import = "ignore"

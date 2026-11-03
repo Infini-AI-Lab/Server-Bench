@@ -1,0 +1,127 @@
+# Where this skill came from.
+#
+# DISTILLED throughout: nothing is reproduced. Someone read the source material,
+# understood the workflow, and wrote original prose against this harness's
+# interfaces.
+schema_version: 1
+skill: kernel-evolution
+retrieved: at the pinned commit below
+
+adapted_from:
+  repository: kernel_evolve_vllm
+  origin: https://github.com/Infini-AI-Lab/kernel_evolve_vllm
+  commit: 9b56664d7d7efa85eea0678462c2565bf4f8266e
+  read_only: true
+  license: NONE-DECLARED (no LICENSE file at the repository root)
+  license_status: >
+    Owner-internal material, adapted under explicit authorisation. Every
+    adaptation is DISTILLED, so no upstream text is carried and
+    no upstream licence attaches to the result.
+
+sources:
+  - id: kernel-fusion-skill
+    source_path: skills/KernelFusion/
+    license: NONE-DECLARED (inherits the source repository's status)
+    files_inspected:
+      - skills/KernelFusion/SKILL.md
+      - skills/KernelFusion/fusion-patterns.md
+      - skills/KernelFusion/reference/01-when-to-fuse.md
+      - skills/KernelFusion/reference/02-fusion-taxonomy.md
+      - skills/KernelFusion/reference/05-hardware-sm90-h100-h200.md
+      - skills/KernelFusion/reference/06-sota-survey.md
+    disposition: DISTILLED
+    informs: [SKILL.md, references/04-fusion.md, references/03-writing.md]
+    what_survived: >
+      The fusion decision process — fuse to remove a round trip or a
+      synchronisation, not to reduce a kernel count; the bound-class taxonomy and
+      which lever each class implies; the roofline argument computed from the
+      implementation rather than from the algorithm.
+    what_did_not: >
+      Every hardware budget, which was written for SM 12.0 and SM 10.0 and does
+      not describe sm_90; the repository's scripts and directory conventions; and
+      the megakernel subtree, which is quarantined (see `excluded`).
+
+  - id: anti-cheat-and-verification
+    source_path: .claude/docs/reference/
+    license: NONE-DECLARED (inherits the source repository's status)
+    files_inspected:
+      - .claude/docs/reference/anti_cheat.md
+      - .claude/docs/reference/verify.md
+      - .claude/docs/reference/candidate_layout.md
+      - .claude/docs/reference/kernels.md
+    disposition: DISTILLED
+    informs: [references/03-writing.md, references/05-verification.md,
+              templates/review-checklist.md]
+    what_survived: >
+      The dispatch-only rule and the audit that produced it — twenty candidates
+      across four operators, each a wrapper reporting a library's speed as its
+      own, each having passed every numerical check. The forbidden-symbol
+      taxonomy. The distinction between dispatch and plumbing. The ordering of a
+      verification battery cheapest-first, and the requirement that a published
+      result carry real numbers rather than a placeholder.
+    what_did_not: >
+      The six-file candidate directory format, the hub publication workflow, the
+      per-check profile names, and every repository-specific command. Those
+      describe a different system's plumbing.
+
+  - id: workload-targets
+    source_path: .claude/docs/reference/workload_targets.md
+    license: NONE-DECLARED (inherits the source repository's status)
+    files_inspected:
+      - .claude/docs/reference/workload_targets.md
+    disposition: DISTILLED
+    informs: [references/02-signature.md]
+    what_survived: >
+      The signature as the unit of optimisation; decode and prefill as different
+      kernels rather than a geomean; per-batch-size lineages; the argument
+      against usage-class labels in place of written-down axes.
+
+  - id: profiler-report-skill
+    source_path: skills/ncu-report-skill/
+    license: NONE-DECLARED (inherits the source repository's status)
+    files_inspected:
+      - skills/ncu-report-skill/SKILL.md
+      - skills/ncu-report-skill/README.md
+    disposition: DISTILLED
+    informs: [references/01-is-it-a-kernel.md, references/06-measuring.md]
+    what_survived: >
+      Which profile fields turn an observation into a hypothesis; occupancy
+      limiters; the warning that a profiler perturbs short kernels and that the
+      wall clock is the tiebreak.
+    what_did_not: >
+      The vendor-specific report parsing, and the Blackwell programming reference
+      it bundles, which is about a different architecture.
+
+  - id: kernel-wiki-skill
+    source_path: skills/KernelWiki/
+    license: MIXED (third-party artefacts under assorted licences; none reproduced)
+    files_inspected:
+      - skills/KernelWiki/SKILL.md
+      - skills/KernelWiki/index.md
+      - skills/KernelWiki/README.md
+    disposition: DISTILLED
+    informs: [references/03-writing.md]
+    what_survived: >
+      The habit of recording where a design idea was learned, so a later reader
+      can check the claim rather than take it.
+    what_did_not: >
+      The artefact store itself — blog snapshots and vendor code excerpts under
+      assorted licences. None of it is reproduced here.
+
+excluded:
+  - id: megakernel-skill-tree
+    source_path: skills/KernelFusion/megakernel/
+    license: MIXED (third-party source under assorted licences; none reproduced)
+    files_inspected:
+      - "skills/KernelFusion/megakernel/ — directory listing only, 78 files, none read
+         into this bundle"
+    disposition: EXCLUDED
+    reason: >
+      Out of scope for this harness. It is a different research
+      question, it needs a schedule compiler and a virtual machine before it
+      computes anything, and it does not compose with an ordinary composable-kernel
+      candidate loop. It also carries a references/ tree of third-party source
+      under several licences, none of which is reproduced here.
+    enforcement: >
+      kernel_evolve.verification.scan scans this skill along with the package, the
+      knowledge tree and the built distribution, and fails rather than warns.

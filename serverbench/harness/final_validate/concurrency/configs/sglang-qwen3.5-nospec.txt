@@ -1,0 +1,23 @@
+# Control arm: the cookbook line (sglang-qwen3.5-cookbook.txt) with speculative
+# decoding removed. NEXTN keeps a draft resident, which costs KV cache on a
+# workload whose median turn is long; this arm separates what speculation buys in
+# TPOT from what it may cost in the TTFT tail.
+# Read by `--serve-extra-file`: comments and line breaks are stripped and the
+# rest is shlex-split onto the server's command line.
+--reasoning-parser qwen3
+--tool-call-parser qwen3_coder
+# --speculative-algorithm NEXTN
+# --speculative-num-steps 3
+# --speculative-eagle-topk 1
+# --speculative-num-draft-tokens 4
+# --mamba-radix-cache-strategy extra_buffer
+# The cookbook's --enable-flashinfer-allreduce-fusion is omitted: it needs SM90+
+# and SGLang refuses it on L40 (SM89) with two cards.
+--mem-fraction-static 0.8
+# Held high so the server's admission limit never caps the answer: the search
+# varies the client's offered load, and the gates are what should bind.
+--max-running-requests 512
+# Not in the cookbook: the corpus carries turns to 989,824 tokens and the
+# checkpoint's native window is 262,144, so the window is extended with YaRN.
+--context-length 1048576
+--json-model-override-args '{"text_config":{"max_position_embeddings":1048576,"rope_parameters":{"rope_type":"yarn","factor":4.0,"original_max_position_embeddings":262144,"mrope_interleaved":true,"mrope_section":[11,11,10],"rope_theta":10000000,"partial_rotary_factor":0.25}}}'

@@ -1,0 +1,9 @@
+# The agent container's environment for this task (read by evolve-common.sh).
+# The checkpoint is compressed-tensors INT4; the shared image's transformers
+# cannot load it without compressed-tensors, so this task runs in the shared
+# image plus compressed-tensors 0.15.0.1 and loguru 0.7.3
+# (serverbench/environments/evolve-agent-int4/Dockerfile), and its candidates
+# install from the shared wheelhouse plus the same two wheels.
+IMAGE=serverbench/evolve-agent:cu128-int4
+ENV_INPUT=serverbench/artifacts/env-input-int4
+IMAGE_DOCKERFILE=serverbench/environments/evolve-agent-int4/Dockerfile

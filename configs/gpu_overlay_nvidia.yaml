@@ -1,0 +1,20 @@
+# Give the local Docker `main` container access to host NVIDIA GPUs.
+# This is the local-Docker equivalent of `[environment].gpus` (which the docker backend ignores).
+# Requires the NVIDIA Container Toolkit (nvidia docker runtime) on the host.
+#
+# This is the standard Docker Compose GPU syntax. `device_ids` pins specific host GPUs;
+# set it to a free card on this machine (`nvidia-smi --query-compute-apps` shows what is
+# busy). Inside the container the reserved GPU appears as cuda:0.
+#
+#   - To use any/all GPUs instead:        count: all     (remove device_ids)
+#   - To use N of them:                   count: 2       (remove device_ids)
+#   - To pin several specific GPUs:       device_ids: ["6", "9"]
+services:
+  main:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["2"]
+              capabilities: [gpu]

@@ -1,0 +1,25 @@
+# SGLang launch line for google/gemma-4-E4B-it with speculative decoding on one
+# L40. --model-path, --host and --port are not here: deploy.py owns them, because
+# the model directory is a bind mount inside the container and the port is
+# allocated per point.
+# Read by `--serve-extra-file`: comments and line breaks are stripped and the
+# rest is shlex-split onto the server's command line.
+--reasoning-parser gemma4
+--tool-call-parser gemma4
+# NEXTN against a separate draft checkpoint, not an MTP head: E4B's config
+# carries no `num_nextn_predict_layers`, so the draft is the 183 MB
+# `google/gemma-4-E4B-it-assistant`, pinned below.
+--speculative-algorithm NEXTN
+# A Hub id plus the revision below, never a host path: `deploy.relocate_draft_model`
+# resolves it in the offline host cache and mounts the repository root.
+--speculative-draft-model-path google/gemma-4-E4B-it-assistant
+--speculative-draft-model-revision 8d0031ea8c2109e2b1e86bb9368a4539b537f80a
+--speculative-num-steps 5
+--speculative-num-draft-tokens 6
+--speculative-eagle-topk 1
+--mem-fraction-static 0.85
+# No --context-length and no rope override: E4B's native window is 131,072,
+# exactly the ceiling the task filters at.
+--max-running-requests 512
+# Held high: the search varies the client's offered load, and a server admission
+# limit below it would cap the answer at the server's queue rather than the gates.

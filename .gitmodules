@@ -1,0 +1,9 @@
+[submodule "serverbench/skills/ncu-report-skill"]
+	path = serverbench/skills/ncu-report-skill
+	url = https://github.com/mit-han-lab/ncu-report-skill.git
+[submodule "agentx-harness"]
+	path = agentx-harness
+	url = https://github.com/SemiAnalysisAI/agentx-harness.git
+[submodule "serverbench/skills_instructed/KernelWiki"]
+	path = serverbench/skills_instructed/KernelWiki
+	url = https://github.com/mit-han-lab/KernelWiki.git
