@@ -14,8 +14,6 @@ evidence a deployed machine records (for example the isolation probe at
 `serverbench/artifacts/isolation/agent-container.json`); they are deselected by
 default (`addopts = "-m 'not host'"` in `serverbench/pyproject.toml`) and run with
 `-m host` after [`deploy.sh`](../../scripts/deploy/README.md).
-`scripts/ci-preflight.sh` runs CI's checks on exactly the files a push would
-carry, so a test that depends on untracked host data fails before the push.
 The suite's scope policy is [`tests/README.md`](../../tests/README.md).
 
 `tests/` is organised by subject:

@@ -11,8 +11,6 @@ would import belongs in that package, not here.
 | `evolve` | **the one production entrypoint** for an evolve run; no logic, everything is in `harness/lifecycle/run.py` |
 | `env.sh` | sourced, not run: resolves the two interpreters (below) and puts this checkout first on `PYTHONPATH` |
 | `correctness-gate.sh` | lint, imports, the measurement path, the run spine and the full suite; ends `READY` or fails ([testing.md](../docs/harness/testing.md)) |
-| `ci-preflight.sh` | CI's `harness` job (install, ruff, ty, pytest) run locally on exactly the files a push would carry, in a throwaway venv; catches a test that depends on untracked host data |
-| `check_git_blob_sizes.py` | refuses tracked files GitHub would reject on push; run by `.github/workflows/cpu.yml` |
 | `model_for_task.py` | which model a task pins (`--id`, `--revision`) and the local snapshot that holds exactly it |
 | `gpu_holder.py` | makes a card a run owns look owned while it is idle; yields when the agent's server needs it. Started by `run.py`, under a different interpreter |
 
