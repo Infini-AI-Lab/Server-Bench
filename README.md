@@ -1,6 +1,8 @@
 <div align="center">
 
-### ServerBench: Can Coding Agents Build LLM Serving Systems?
+# ServerBench
+
+### Can Coding Agents Build LLM Serving Systems?
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](serverbench/pyproject.toml)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
