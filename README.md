@@ -4,6 +4,7 @@
 
 ### Can Coding Agents Build LLM Serving Systems?
 
+[![arXiv](https://img.shields.io/badge/arXiv-2611.06841-b31b1b.svg)](https://arxiv.org/abs/2611.06841)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](serverbench/pyproject.toml)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
@@ -155,6 +156,22 @@ Server-Bench/
 - [`serving_tasks/README.md`](serving_tasks/README.md) and [`serving_tasks/_manage/README.md`](serving_tasks/_manage/README.md): the tasks and `taskctl`
 - [`serverbench/harness/final_validate/README.md`](serverbench/harness/final_validate/README.md): how the verdict measures and scores
 - [`serverbench/docs/`](serverbench/docs/README.md): design pages for the evolve harness, containers, contracts and correctness
+
+## 📝 Citation
+
+If you find ServerBench useful, please cite our [paper](https://arxiv.org/abs/2611.06841):
+
+```bibtex
+@misc{zhong2026serverbench,
+  title={ServerBench: How can your coding agents design specialized LLM serving systems?},
+  author={Xinrui Zhong and Zhiming Wang and Yongqi Liu and Zhaohui Wang and Shanglin Yang and Zikun Li and Zhuoming Chen and Beidi Chen},
+  year={2026},
+  eprint={2611.06841},
+  archivePrefix={arXiv},
+  primaryClass={cs.AI},
+  url={https://arxiv.org/abs/2611.06841}
+}
+```
 
 ## 📜 License
 
